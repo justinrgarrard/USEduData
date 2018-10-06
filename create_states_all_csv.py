@@ -33,9 +33,10 @@ def main():
     finance_data = pd.read_csv(FINANCE_FILENAME)
     enroll_data = pd.read_csv(ENROLL_FILENAME)
 
-    full = pd.concat([finance_data, enroll_data], sort=False)
-    cols = full.columns.tolist()
-    print(cols)
+    # full = pd.concat([finance_data, enroll_data], sort=False)
+    # full = finance_data.join(enroll_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
+    full = finance_data.merge(enroll_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
+    full.sort_values(['YEAR', 'STATE'])
 
     full.to_csv(OUTPUT_FILENAME, index=False)
 

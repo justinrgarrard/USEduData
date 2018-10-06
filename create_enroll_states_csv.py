@@ -124,6 +124,9 @@ def nces_spreadsheet_to_dataframe(filename):
         except:
             pass
 
+    # Sort
+    data.sort_values(['SURVYEAR', 'STATE'])
+
     return data
 
 
@@ -163,6 +166,9 @@ def enroll_summarize_dataframe(enroll_df):
                                 pd.to_numeric(enroll_df['G11'], errors='coerce') + pd.to_numeric(enroll_df['G12'], errors='coerce')
 
     summary_df['GRADES_KG_12'] = pd.to_numeric(summary_df['GRADES_PK'], errors='coerce') + summary_df['GRADES_1_8'] + summary_df['GRADES_9_12']
+
+    # Sort
+    summary_df.sort_values(['YEAR', 'STATE'])
 
     return summary_df
 

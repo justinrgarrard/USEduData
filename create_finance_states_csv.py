@@ -60,6 +60,9 @@ def main():
     # Add a primary key
     pk = output['YEAR'].astype(str) + '_' + output['STATE'].apply(lambda x: x.upper())
     output.insert(0, 'PRIMARY_KEY', pk)
+
+    # Sort
+    output.sort_values(['YEAR', 'STATE'])
     output.to_csv(OUTPUT_FILENAME, index=False)
 
 
