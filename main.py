@@ -6,6 +6,7 @@ import create_finance_districts_csv
 import create_finance_states_csv
 import create_naep_states_csv
 import create_enroll_states_csv
+import create_states_all_csv
 
 # Create district summary file
 create_finance_districts_csv.main()
@@ -18,3 +19,6 @@ create_naep_states_csv.main()
 
 # Create a summary file from the NCES data
 create_enroll_states_csv.main()
+
+# Create a denormalized file from all the data
+create_states_all_csv.main()

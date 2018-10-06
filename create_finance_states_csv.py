@@ -56,6 +56,10 @@ def main():
 
     # Run a query to aggregate data by state
     output = pd.read_sql(sql=query, con=con)
+
+    # Add a primary key
+    pk = output['YEAR'].astype(str) + '_' + output['STATE'].apply(lambda x: x.upper())
+    output.insert(0, 'PRIMARY_KEY', pk)
     output.to_csv(OUTPUT_FILENAME, index=False)
 
 

@@ -76,7 +76,7 @@ def nces_spreadsheet_to_dataframe(filename):
     print('Parsing ' + str(filename) + '...')
 
     # Open the file, parse it, and truncate the highlights
-    print(SCHEMA)
+    # print(SCHEMA)
     d = pd.read_excel(filename, sheet_name=0, dtype=str)
 
     # Fixup for whitespace in column names
@@ -200,10 +200,6 @@ def main():
     # Summarize the output
     output = enroll_summarize_dataframe(output)
     output.to_csv(OUTPUT_FILENAME, index=False)
-
-    x = list(set(output['YEAR']))
-    x.sort()
-    print(x)
 
     # Clean up
     shutil.rmtree(ZIP_NAME.strip('.zip') + '/')
