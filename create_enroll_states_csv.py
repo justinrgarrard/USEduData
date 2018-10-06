@@ -88,6 +88,9 @@ def nces_spreadsheet_to_dataframe(filename):
 
     data = d[SCHEMA]
 
+    # Add a year, because the source spreadsheets are unreliable
+    data['SURVYEAR'] = re.findall(numbersonly, filename)[0]
+
     # Synonymous columns fixup
     if data['STATE'].isnull().values.any():
         if data['STATENAME'].isnull().values.any():
@@ -100,11 +103,16 @@ def nces_spreadsheet_to_dataframe(filename):
         data['TOTAL'] = data['MEMBER']
     data.drop('MEMBER', axis=1)
 
-    # Adjust year column to remove hyphens
-    data['SURVYEAR'] = data['SURVYEAR'].apply(lambda x: str(x).split('-')[0])
+    # Some years only used abbreviations for states
+    # Change those to full state names
+    if 'AZ' in data['STATE'].values:
+        abbr_to_name = us.states.mapping('abbr', 'name')
+        for key in abbr_to_name.keys():
+            abbr_to_name[key] = abbr_to_name[key].upper()
+        data['STATE'].replace(abbr_to_name, inplace=True)
 
-    # Y2K fixup
-    data['SURVYEAR'] = data['SURVYEAR'].apply(lambda x: x if len(str(x)) > 2 else '19' + str(x))
+    # Capitalize state names if necessary
+    data['STATE'] = data['STATE'].apply(lambda x: x.upper())
 
     # Drop empty rows
     data = data.dropna(how='all')
@@ -140,15 +148,11 @@ def enroll_summarize_dataframe(enroll_df):
     summary_df['YEAR'] = enroll_df['SURVYEAR']
 
     # Create summary columns for grades
-    summary_df['GRADES_PK'] = enroll_df['PK']
-
-    summary_df['GRADES_KG'] = enroll_df['KG']
-
-    summary_df['GRADES_4'] = enroll_df['G04']
-
-    summary_df['GRADES_8'] = enroll_df['G08']
-
-    summary_df['GRADES_12'] = enroll_df['G12']
+    summary_df['GRADES_PK'] = pd.to_numeric(enroll_df['PK'], errors='coerce')
+    summary_df['GRADES_KG'] = pd.to_numeric(enroll_df['KG'], errors='coerce')
+    summary_df['GRADES_4'] = pd.to_numeric(enroll_df['G04'], errors='coerce')
+    summary_df['GRADES_8'] = pd.to_numeric(enroll_df['G08'], errors='coerce')
+    summary_df['GRADES_12'] = pd.to_numeric(enroll_df['G12'], errors='coerce')
 
     summary_df['GRADES_1_8'] = pd.to_numeric(enroll_df['G01'], errors='coerce') + pd.to_numeric(enroll_df['G02'], errors='coerce') + \
                             pd.to_numeric(enroll_df['G03'], errors='coerce') + pd.to_numeric(enroll_df['G04'], errors='coerce') + \
@@ -196,6 +200,10 @@ def main():
     # Summarize the output
     output = enroll_summarize_dataframe(output)
     output.to_csv(OUTPUT_FILENAME, index=False)
+
+    x = list(set(output['YEAR']))
+    x.sort()
+    print(x)
 
     # Clean up
     shutil.rmtree(ZIP_NAME.strip('.zip') + '/')
