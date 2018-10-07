@@ -33,17 +33,23 @@ SCHEMA = ['SURVYEAR',
 
 # It would've been annoying to hard code each variation, so let's do it this way
 base = ['PK', 'KG', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', 'UG', 'AE', 'AL']
+gr = ['PK', 'KG', 'G01', 'G02', 'G03', 'G04', 'G05', 'G06', 'G07', 'G08', 'G09', 'G10', 'G11', 'G12', 'G13', 'UG', 'AE', 'AL']
 race_mod = ['AM', 'AS', 'HI', 'BL', 'WH', 'HP', 'TR']
 gender_mod = ['M', 'F']
 
 # Grade, All Races and All Genders
-gr = ['PK', 'KG', 'G01', 'G02', 'G03', 'G04', 'G05', 'G06', 'G07', 'G08', 'G09', 'G10', 'G11', 'G12', 'G13', 'UG', 'AE', 'AL']
 for item in gr:
     SCHEMA.append(item)
 
 # Race, All Grades and All Genders
 for item in race_mod:
     SCHEMA.append(item)
+
+# Race + Grade
+for grade in base:
+    for race in race_mod:
+        column_name = race + grade
+        SCHEMA.append(column_name)
 
 # Race + Grade + Gender
 for grade in base:
@@ -155,6 +161,30 @@ def enroll_summarize_dataframe(enroll_df):
     summary_df['YEAR'] = enroll_df['SURVYEAR']
 
     # Create summary columns for grades
+    def create_summary_grades(prefix):
+        summary_df['GRADES_' + prefix + '_PK'] = pd.to_numeric(enroll_df[prefix + 'PK'], errors='coerce')
+        summary_df['GRADES_' + prefix + '_KG'] = pd.to_numeric(enroll_df[prefix + 'KG'], errors='coerce')
+        summary_df['GRADES_' + prefix + '_4'] = pd.to_numeric(enroll_df[prefix + '04'], errors='coerce')
+        summary_df['GRADES_' + prefix + '_8'] = pd.to_numeric(enroll_df[prefix + '08'], errors='coerce')
+        summary_df['GRADES_' + prefix + '_12'] = pd.to_numeric(enroll_df[prefix + '12'], errors='coerce')
+
+        summary_df['GRADES_' + prefix + '_1_8'] = pd.to_numeric(enroll_df[prefix + '01'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '02'],
+                                                                                                    errors='coerce') + \
+                                   pd.to_numeric(enroll_df[prefix + '03'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '04'],
+                                                                                                    errors='coerce') + \
+                                   pd.to_numeric(enroll_df[prefix + '05'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '06'],
+                                                                                                    errors='coerce') + \
+                                   pd.to_numeric(enroll_df[prefix + '07'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '08'],
+                                                                                                    errors='coerce')
+
+        summary_df['GRADES_' + prefix + '9_12'] = pd.to_numeric(enroll_df[prefix + '09'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '10'],
+                                                                                                     errors='coerce') + \
+                                    pd.to_numeric(enroll_df[prefix + '11'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '12'],
+                                                                                                     errors='coerce')
+
+        summary_df['GRADES_' + prefix + 'KG_12'] = pd.to_numeric(summary_df['GRADES_' + prefix + '_PK'], errors='coerce') + summary_df[
+            'GRADES_' + prefix + '_1_8'] + summary_df['GRADES_' + prefix + '9_12']
+
     summary_df['GRADES_PK'] = pd.to_numeric(enroll_df['PK'], errors='coerce')
     summary_df['GRADES_KG'] = pd.to_numeric(enroll_df['KG'], errors='coerce')
     summary_df['GRADES_4'] = pd.to_numeric(enroll_df['G04'], errors='coerce')
@@ -169,7 +199,12 @@ def enroll_summarize_dataframe(enroll_df):
     summary_df['GRADES_9_12'] = pd.to_numeric(enroll_df['G09'], errors='coerce') + pd.to_numeric(enroll_df['G10'], errors='coerce') + \
                                 pd.to_numeric(enroll_df['G11'], errors='coerce') + pd.to_numeric(enroll_df['G12'], errors='coerce')
 
-    summary_df['GRADES_KG_12'] = pd.to_numeric(summary_df['GRADES_PK'], errors='coerce') + summary_df['GRADES_1_8'] + summary_df['GRADES_9_12']
+    summary_df['GRADES_KG_12'] = pd.to_numeric(summary_df['GRADES_KG'], errors='coerce') + summary_df['GRADES_1_8'] + summary_df['GRADES_9_12']
+
+    summary_df['GRADES_ALL'] = pd.to_numeric(summary_df['GRADES_PK'], errors='coerce') + summary_df['GRADES_KG_12']
+
+    # for race in race_mod:
+    #     create_summary_grades(race)
 
     # Sort
     summary_df.sort_values(['YEAR', 'STATE'])
