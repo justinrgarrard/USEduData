@@ -58,7 +58,7 @@ def main():
     output = pd.read_sql(sql=query, con=con)
 
     # Add a primary key
-    pk = output['YEAR'].astype(str) + '_' + output['STATE'].apply(lambda x: x.upper())
+    pk = output['YEAR'].astype(str) + '_' + output['STATE']
     output.insert(0, 'PRIMARY_KEY', pk)
 
     # Sort

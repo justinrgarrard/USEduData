@@ -82,6 +82,7 @@ def elsect_spreadsheet_to_dataframe(filename):
     # Convert the state codes to state names
     data[st_code] = data[st_code].applymap(lambda x: x[:2])
     data['STATE'] = data[st_code].applymap(lambda x: us.STATES[int(x) - 1])
+    data['STATE'] = data['STATE'].apply(lambda x: str(x).upper())
     data = data.drop(st_code, axis=1)
 
     # Replace spaces with underscore in state names
