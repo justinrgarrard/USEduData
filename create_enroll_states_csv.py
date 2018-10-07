@@ -114,8 +114,12 @@ def nces_spreadsheet_to_dataframe(filename):
     # Capitalize state names if necessary
     data['STATE'] = data['STATE'].apply(lambda x: x.upper())
 
+    # Replace spaces with underscore in state names
+    data['STATE'] = data['STATE'].apply(lambda x: re.sub(' ', '_', x.strip()))
+
     # Drop empty rows
     data = data.dropna(how='all')
+    data = data[data['STATE'] != 'NAN']
 
     # Get rid of trailing whitespace from all strings
     for column in data.columns:

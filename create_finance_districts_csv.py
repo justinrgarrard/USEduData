@@ -84,6 +84,9 @@ def elsect_spreadsheet_to_dataframe(filename):
     data['STATE'] = data[st_code].applymap(lambda x: us.STATES[int(x) - 1])
     data = data.drop(st_code, axis=1)
 
+    # Replace spaces with underscore in state names
+    data['STATE'] = data['STATE'].apply(lambda x: re.sub(' ', '_', str(x).strip()))
+
     # Fill in the year data
     data['YRDATA'] = year
 
