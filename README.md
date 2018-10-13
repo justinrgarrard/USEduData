@@ -39,7 +39,7 @@ PRIMARY_KEY,STATE,YEAR,GRADES_PK,GRADES_KG,GRADES_4,GRADES_8,GRADES_12,GRADES_1_
 
 * GRADES 9_12: Number of students in the ninth through twelfth grades.
 
-* GRADES_KG_12: Number of students in kindergarten through twelfth grade.
+* GRADES_KG_12: Number of students in Kindergarten through twelfth grade.
 
 * GRADES_ALL: The count of all students in the state. Comparable to ENROLL in the financial data (which is the U.S.
 Census Bureau's estimate for students in the state).
@@ -60,7 +60,7 @@ NCES's estimate for students in the state).
     * STATE_REVENUE
     * LOCAL_REVENUE
     
-* TOTAL_EXPENDITURE:
+* TOTAL_EXPENDITURE: The total expenditure for the state.
     * INSTRUCTION_EXPENDITURE
     * SUPPORT_SERVICES_EXPENDITURE
     * CAPITAL_OUTLAY_EXPENDITURE
@@ -98,3 +98,21 @@ versions will allow for school district-level granularity.
 
 * The licensing of this data states that it must not be used to identify specific students or schools. So
 don't do that.
+
+### Data Pipeline Control Flow
+
+1. The main function is called.
+
+2. Subroutines for each category are run (demographics, financials, and achievement).
+
+3. Each subroutine extracts data from a corresponding zip file containing annual reports.
+
+4. Annual reports are transformed into Pandas data objects, cleaned, and collected into a single spreadsheet for that
+category.
+
+5. The category spreadsheets are combined into a master spreadsheet (states_all.csv) that includes summary columns
+for every category, for every year, and for every state.
+
+### Version Info
+
+* v0.1: Initial commit.
