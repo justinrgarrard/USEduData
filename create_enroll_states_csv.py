@@ -134,6 +134,11 @@ def nces_spreadsheet_to_dataframe(filename):
         except:
             pass
 
+    # Cast appropriate columns to numbers, removing non-number symbols
+    for column in data.columns:
+        if 'STATE' not in column:
+            data[column] = pd.to_numeric(data[column], errors='coerce')
+
     # Sort
     data.sort_values(['SURVYEAR', 'STATE'])
 
@@ -148,15 +153,12 @@ def enroll_summarize_dataframe(enroll_df):
     # Translate the -1, -2, and M values to NaN's
     enroll_df.replace(-1, np.nan, inplace=True)
     enroll_df.replace(-2, np.nan, inplace=True)
-    enroll_df.replace('-1', np.nan, inplace=True)
-    enroll_df.replace('-2', np.nan, inplace=True)
-    enroll_df.replace('M', np.nan, inplace=True)
 
     # Create summary dataframe
     summary_df = pd.DataFrame()
 
     # Create summary columns for state and year
-    summary_df['PRIMARY_KEY'] = enroll_df['SURVYEAR'] + '_' + enroll_df['STATE']
+    summary_df['PRIMARY_KEY'] = enroll_df['SURVYEAR'].astype(str) + '_' + enroll_df['STATE']
     summary_df['STATE'] = enroll_df['STATE']
     summary_df['YEAR'] = enroll_df['SURVYEAR']
 
@@ -164,30 +166,25 @@ def enroll_summarize_dataframe(enroll_df):
     def create_summary_grades(prefix):
         if len(prefix) == 0:
             prefix = 'G'
-            summary_df['GRADES_PK_' + prefix] = pd.to_numeric(enroll_df['PK'], errors='coerce')
-            summary_df['GRADES_KG_' + prefix] = pd.to_numeric(enroll_df['KG'], errors='coerce')
+            summary_df['GRADES_PK_' + prefix] = enroll_df['PK']
+            summary_df['GRADES_KG_' + prefix] = enroll_df['KG']
         else:
-            summary_df['GRADES_PK_' + prefix] = pd.to_numeric(enroll_df[prefix + 'PK'], errors='coerce')
-            summary_df['GRADES_KG_' + prefix] = pd.to_numeric(enroll_df[prefix + 'KG'], errors='coerce')
+            summary_df['GRADES_PK_' + prefix] = enroll_df[prefix + 'PK']
+            summary_df['GRADES_KG_' + prefix] = enroll_df[prefix + 'KG']
 
-        summary_df['GRADES_4_' + prefix] = pd.to_numeric(enroll_df[prefix + '04'], errors='coerce')
-        summary_df['GRADES_8_' + prefix] = pd.to_numeric(enroll_df[prefix + '08'], errors='coerce')
-        summary_df['GRADES_12_' + prefix] = pd.to_numeric(enroll_df[prefix + '12'], errors='coerce')
+        summary_df['GRADES_4_' + prefix] = enroll_df[prefix + '04']
+        summary_df['GRADES_8_' + prefix] = enroll_df[prefix + '08']
+        summary_df['GRADES_12_' + prefix] = enroll_df[prefix + '12']
 
-        summary_df['GRADES_1_8_' + prefix] = pd.to_numeric(enroll_df[prefix + '01'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '02'],
-                                                                                                    errors='coerce') + \
-                                   pd.to_numeric(enroll_df[prefix + '03'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '04'],
-                                                                                                    errors='coerce') + \
-                                   pd.to_numeric(enroll_df[prefix + '05'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '06'],
-                                                                                                    errors='coerce') + \
-                                   pd.to_numeric(enroll_df[prefix + '07'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '08'],
-                                                                                                    errors='coerce')
+        summary_df['GRADES_1_8_' + prefix] = enroll_df[prefix + '01'] + enroll_df[prefix + '02'] + \
+                                   enroll_df[prefix + '03'] + enroll_df[prefix + '04'] + \
+                                   enroll_df[prefix + '05'] + enroll_df[prefix + '06'] + \
+                                   enroll_df[prefix + '07'] + enroll_df[prefix + '08']
 
-        summary_df['GRADES_9_12_' + prefix] = pd.to_numeric(enroll_df[prefix + '09'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '10'],
-                                                                                                     errors='coerce') + \
-                                    pd.to_numeric(enroll_df[prefix + '11'], errors='coerce') + pd.to_numeric(enroll_df[prefix + '12'],
-                                                                                                     errors='coerce')
-        summary_df['GRADES_ALL_' + prefix] = pd.to_numeric(summary_df['GRADES_PK_' + prefix], errors='coerce') + + summary_df['GRADES_1_8_' + prefix] + \
+        summary_df['GRADES_9_12_' + prefix] = enroll_df[prefix + '09'] + enroll_df[prefix + '10'] + \
+                                    enroll_df[prefix + '11'] + enroll_df[prefix + '12']
+
+        summary_df['GRADES_ALL_' + prefix] = summary_df['GRADES_PK_' + prefix] + summary_df['GRADES_1_8_' + prefix] + \
                                              summary_df['GRADES_9_12_' + prefix]
 
     create_summary_grades('')
