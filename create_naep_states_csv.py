@@ -44,7 +44,6 @@ def nde_spreadsheet_to_dataframe(filename):
     # Give the user a heads-up
     print('Parsing ' + str(filename) + '...')
 
-
     # Open the file, parse it, and truncate the highlights
     data = pd.read_excel(filename, sheet_name=1, dtype=str)
     data = data.rename(index=str, columns={'Year': 'YEAR',
@@ -65,6 +64,11 @@ def nde_spreadsheet_to_dataframe(filename):
 
     # Drop the unused demographic column
     data = data.drop('DEMO', axis=1)
+
+    # Cast appropriate columns to numbers, removing non-number symbols
+    for column in data.columns:
+        if column not in ['STATE', 'YEAR', 'TEST_SUBJECT', 'TEST_YEAR']:
+            data[column] = pd.to_numeric(data[column], errors='coerce')
 
     return data
 
