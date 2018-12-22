@@ -2,16 +2,12 @@
 
 A compilation of several education databases, summarized into a single file (states_all.csv).
 
-**NOTE**: Project is in development.
-
-**NOTE**: Data is too large for a GitHub repo. Working on a hosting solution.
-
 ### Overview
 
 The data is broken down into three main categories:
 
 * **Demographics**: 
-A breakdown of students enrolled in schools by age, race, and gender.
+A breakdown of students enrolled in schools by age (TODO: race and gender).
 
 * **Financial Status**: 
 A breakdown of school districts by revenue and expenditure.
@@ -90,7 +86,7 @@ were modified to place key data on the same sheet, making scripting easier.
 
 * The column 'ENROLL' represents the U.S. Census Bureau data value (financial data), while the
 column 'GRADES_ALL' represents the NCES data value (demographic data). Though the two organizations
-correspond on this matter, these values (which are ostensibly the same) do vary. Documentation chalks this
+correspond on this matter, these values (which are ostensibly the same) do vary. Their documentation chalks this
 up to differences in membership (i.e. what is and is not a fourth grade student).
 
 * The current version of this data is concerned with state-level patterns. It is the author's hope that future
@@ -105,13 +101,15 @@ don't do that.
 
 2. Subroutines for each category are run (demographics, financials, and achievement).
 
-3. Each subroutine extracts data from a corresponding zip file containing annual reports.
+3. Each subroutine extracts annual spreadsheets from a corresponding zip file.
 
 4. Annual reports are transformed into Pandas data objects, cleaned, and collected into a single spreadsheet for that
 category.
 
 5. The category spreadsheets are combined into a master spreadsheet (states_all.csv) that includes summary columns
 for every category, for every year, and for every state.
+
+6. A data sanity check is run, generating a text file (sanity_check.txt) that reports on null values.
 
 ### Version Info
 
