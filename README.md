@@ -2,18 +2,28 @@
 
 A compilation of several education databases, summarized into a single file (states_all.csv).
 
+The source data is too large to host on GitHub, but it can be pulled from the corresponding Kaggle 
+[link](https://www.kaggle.com/noriuk/us-education-datasets-unification-project/home).
+
+### Usage
+
+1. Download the source data from Kaggle (all the .zip files).
+2. Install the relevant Python packages if necessary (see requirements.txt).
+3. Run main.py to generate output data (all the .csv files).
+
 ### Overview
 
 The data is broken down into three main categories:
 
 * **Demographics**: 
-A breakdown of students enrolled in schools by age (TODO: race and gender).
+A breakdown of students enrolled in schools by school year (TODO: race and gender).
 
 * **Financial Status**: 
-A breakdown of school districts by revenue and expenditure.
+A breakdown of states by revenue and expenditure.
 
 * **Academic Achievement**: 
-A breakdown of student performance as assessed by the corresponding exams.
+A breakdown of student performance as assessed by the corresponding exams (math and reading, 
+grades 4 and 8).
 
 ### Data: Demographics
 
@@ -89,13 +99,15 @@ column 'GRADES_ALL' represents the NCES data value (demographic data). Though th
 correspond on this matter, these values (which are ostensibly the same) do vary. Their documentation chalks this
 up to differences in membership (i.e. what is and is not a fourth grade student).
 
+* NAEP test score data is only available for certain years
+
 * The current version of this data is concerned with state-level patterns. It is the author's hope that future
 versions will allow for school district-level granularity.
 
 * The licensing of this data states that it must not be used to identify specific students or schools. So
 don't do that.
 
-### Data Pipeline Control Flow
+### Data Pipeline
 
 1. The main function is called.
 
