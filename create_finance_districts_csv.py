@@ -41,7 +41,7 @@ doublespace = re.compile(r'  ')
 numbersonly = re.compile(r'\d+')
 
 
-def elsect_spreadsheet_to_dataframe(filename):
+def elsect_spreadsheet_to_dataframe(filename, logger=None):
     """
     Converts a elsect data spreadsheet to a Pandas dataframe.
     Performs minor alterations to the data
@@ -53,7 +53,7 @@ def elsect_spreadsheet_to_dataframe(filename):
     """
 
     # Give the user a heads-up
-    print('Parsing ' + str(filename) + '...')
+    logger.debug('Parsing ' + str(filename) + '...')
 
     # Convert the year data to full years
     # Can't depend on spreadsheet value, so we'll do it by filename
@@ -94,7 +94,7 @@ def elsect_spreadsheet_to_dataframe(filename):
     return data
 
 
-def main():
+def main(logger=None):
     # Unpack the data
     out = zipfile.ZipFile(ZIP_NAME, 'r')
     file_list = out.namelist()
@@ -105,7 +105,7 @@ def main():
     # Iterate through spreadsheets, extracting data
     record = []
     for item in file_list:
-        df = elsect_spreadsheet_to_dataframe(item)
+        df = elsect_spreadsheet_to_dataframe(item, logger)
         record.append(df)
 
     # Glue the annual surveys into a single file

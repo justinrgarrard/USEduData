@@ -69,7 +69,7 @@ doublespace = re.compile(r'  ')
 numbersonly = re.compile(r'\d+')
 
 
-def nces_spreadsheet_to_dataframe(filename):
+def nces_spreadsheet_to_dataframe(filename, logger=None):
     """
     Converts an NCES data spreadsheet to a Pandas dataframe.
 
@@ -79,7 +79,7 @@ def nces_spreadsheet_to_dataframe(filename):
     """
 
     # Give the user a heads-up
-    print('Parsing ' + str(filename) + '...')
+    logger.debug('Parsing ' + str(filename) + '...')
 
     # Open the file, parse it, and truncate the highlights
     # print(SCHEMA)
@@ -198,13 +198,7 @@ def enroll_summarize_dataframe(enroll_df):
     return summary_df
 
 
-def main():
-    # target = 'enroll_2014.xls'
-    # df = nces_spreadsheet_to_dataframe(target)
-    # df.to_csv(OUTPUT_FILENAME, index=False)
-    #
-    # print(df['STATE'].isnull())
-
+def main(logger=None):
     # Unpack the data
     out = zipfile.ZipFile(ZIP_NAME, 'r')
     file_list = out.namelist()
@@ -216,7 +210,7 @@ def main():
     record = []
     for item in file_list:
         if '/.' not in item:
-            df = nces_spreadsheet_to_dataframe(item)
+            df = nces_spreadsheet_to_dataframe(item, logger=logger)
             record.append(df)
 
     # Glue the annual surveys into a single file

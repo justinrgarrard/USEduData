@@ -25,9 +25,9 @@ numbersonly = re.compile(r'\d+')
 yr_range = np.arange(1992, 2016, 1)
 
 
-def main():
+def main(logger=None):
     # Notify user
-    print('Creating aggregate file...')
+    logger.debug('Creating aggregate file...')
 
     # Combine data
     finance_data = pd.read_csv(FINANCE_FILENAME)

@@ -43,9 +43,9 @@ query = \
     '''
 
 
-def main():
+def main(logger=None):
     # Notify user
-    print('Parsing ' + str(INPUT_FILENAME) + '...')
+    logger.debug('Parsing ' + str(INPUT_FILENAME) + '...')
 
     # Create a temporary SQL database populated with district data
     con = sqlite3.connect(':memory:')

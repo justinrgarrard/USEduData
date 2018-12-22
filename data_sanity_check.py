@@ -7,8 +7,8 @@ import pandas as pd
 import pprint
 
 
-def main():
-    print('Creating data sanity check file...')
+def main(logger=None):
+    logger.debug('Creating data sanity check file...')
     # Load in data
     all_df = pd.read_csv('states_all.csv')
     sanity_check_output = []

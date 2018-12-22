@@ -32,7 +32,7 @@ doublespace = re.compile(r'  ')
 numbersonly = re.compile(r'\d+')
 
 
-def nde_spreadsheet_to_dataframe(filename):
+def nde_spreadsheet_to_dataframe(filename, logger=None):
     """
     Converts an NDE data spreadsheet to a Pandas dataframe.
 
@@ -42,7 +42,7 @@ def nde_spreadsheet_to_dataframe(filename):
     """
 
     # Give the user a heads-up
-    print('Parsing ' + str(filename) + '...')
+    logger.debug('Parsing ' + str(filename) + '...')
 
     # Open the file, parse it, and truncate the highlights
     data = pd.read_excel(filename, sheet_name=1, dtype=str)
@@ -112,7 +112,7 @@ def naep_summarize_dataframe(naep_df):
     return summary_df
 
 
-def main():
+def main(logger=None):
     # Unpack the data
     out = zipfile.ZipFile(ZIP_NAME, 'r')
     file_list = out.namelist()
@@ -122,7 +122,7 @@ def main():
     # Iterate through spreadsheets, extracting data
     record = []
     for item in file_list:
-        df = nde_spreadsheet_to_dataframe(item)
+        df = nde_spreadsheet_to_dataframe(item, logger)
         record.append(df)
 
     # Glue the annual surveys into a single file
