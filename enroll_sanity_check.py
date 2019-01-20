@@ -10,7 +10,7 @@ import pprint
 def main(logger=None):
     logger.debug('Creating data sanity check file...')
     # Load in data
-    all_df = pd.read_csv('states_all.csv')
+    all_df = pd.read_csv('enroll_states.csv')
     sanity_check_output = []
 
 
@@ -28,12 +28,6 @@ def main(logger=None):
         sanity_check_output.append('\n')
     sanity_check_output.append('\n')
 
-    # Nulls for total revenue (usually U.S. territories where the data wasn't available)
-    sanity_check_output.append('Nulls in Total Revenue')
-    sanity_check_output.append('\n')
-    null_rev = all_df[all_df['TOTAL_REVENUE'].isnull()].sort_values(by=['YEAR'])
-    sanity_check_output.append(null_rev.to_csv())
-    sanity_check_output.append('\n')
 
     # Nulls by years
     null_count_dict = {}
@@ -46,7 +40,8 @@ def main(logger=None):
     sanity_check_output.append(pprint.pformat(null_count_dict))
     sanity_check_output.append('\n')
 
-    with open('sanity_check.txt', 'w+') as f:
+
+    with open('enroll_sanity_check.txt', 'w+') as f:
         f.writelines(sanity_check_output)
 
 

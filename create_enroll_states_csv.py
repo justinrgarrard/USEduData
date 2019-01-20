@@ -139,10 +139,66 @@ def nces_spreadsheet_to_dataframe(filename, logger=None):
         if 'STATE' not in column:
             data[column] = pd.to_numeric(data[column], errors='coerce')
 
-    # Sort
-    data.sort_values(['SURVYEAR', 'STATE'])
+    # Create a primary key for ease of use
+    primary_key_col = data['SURVYEAR'].astype(str) + '_' + data['STATE']
+    data.insert(0, 'PRIMARY_KEY', primary_key_col)
 
+    # Sort
+    data.sort_values(['PRIMARY_KEY'], inplace=True)
     return data
+
+
+# def enroll_summarize_dataframe(enroll_df):
+#     """
+#
+#     :return:
+#     """
+#     # Translate the -1, -2, and M values to NaN's
+#     enroll_df.replace(-1, np.nan, inplace=True)
+#     enroll_df.replace(-2, np.nan, inplace=True)
+#
+#     # Create summary dataframe
+#     summary_df = pd.DataFrame()
+#
+#     # Create summary columns for state and year
+#     summary_df['PRIMARY_KEY'] = enroll_df['SURVYEAR'].astype(str) + '_' + enroll_df['STATE']
+#     summary_df['STATE'] = enroll_df['STATE']
+#     summary_df['YEAR'] = enroll_df['SURVYEAR']
+#
+#     # Create summary columns for grades
+#     def create_summary_grades(prefix):
+#         if len(prefix) == 0:
+#             prefix = 'G'
+#             summary_df['GRADES_PK_' + prefix] = enroll_df['PK']
+#             summary_df['GRADES_KG_' + prefix] = enroll_df['KG']
+#         else:
+#             summary_df['GRADES_PK_' + prefix] = enroll_df[prefix + 'PK']
+#             summary_df['GRADES_KG_' + prefix] = enroll_df[prefix + 'KG']
+#
+#         summary_df['GRADES_4_' + prefix] = enroll_df[prefix + '04']
+#         summary_df['GRADES_8_' + prefix] = enroll_df[prefix + '08']
+#         summary_df['GRADES_12_' + prefix] = enroll_df[prefix + '12']
+#
+#         summary_df['GRADES_1_8_' + prefix] = enroll_df[prefix + '01'] + enroll_df[prefix + '02'] + \
+#                                    enroll_df[prefix + '03'] + enroll_df[prefix + '04'] + \
+#                                    enroll_df[prefix + '05'] + enroll_df[prefix + '06'] + \
+#                                    enroll_df[prefix + '07'] + enroll_df[prefix + '08']
+#
+#         summary_df['GRADES_9_12_' + prefix] = enroll_df[prefix + '09'] + enroll_df[prefix + '10'] + \
+#                                     enroll_df[prefix + '11'] + enroll_df[prefix + '12']
+#
+#         summary_df['GRADES_ALL_' + prefix] = summary_df['GRADES_PK_' + prefix] + summary_df['GRADES_1_8_' + prefix] + \
+#                                              summary_df['GRADES_9_12_' + prefix]
+#
+#     create_summary_grades('')
+#
+#     # for race in race_mod:
+#     #     create_summary_grades(race)
+#
+#     # Sort
+#     summary_df.sort_values(['YEAR', 'STATE'])
+#
+#     return summary_df
 
 
 def enroll_summarize_dataframe(enroll_df):
@@ -158,42 +214,85 @@ def enroll_summarize_dataframe(enroll_df):
     summary_df = pd.DataFrame()
 
     # Create summary columns for state and year
-    summary_df['PRIMARY_KEY'] = enroll_df['SURVYEAR'].astype(str) + '_' + enroll_df['STATE']
+    summary_df['PRIMARY_KEY'] = enroll_df['PRIMARY_KEY']
     summary_df['STATE'] = enroll_df['STATE']
     summary_df['YEAR'] = enroll_df['SURVYEAR']
 
     # Create summary columns for grades
-    def create_summary_grades(prefix):
+    def create_summary_grades(prefix, suffix=''):
+        """
+        Create summary values by race (prefix) and gender (suffix).
+        :param prefix:
+        :param suffix:
+        :return:
+        """
         if len(prefix) == 0:
             prefix = 'G'
             summary_df['GRADES_PK_' + prefix] = enroll_df['PK']
             summary_df['GRADES_KG_' + prefix] = enroll_df['KG']
         else:
-            summary_df['GRADES_PK_' + prefix] = enroll_df[prefix + 'PK']
-            summary_df['GRADES_KG_' + prefix] = enroll_df[prefix + 'KG']
+            summary_df['GRADES_PK_' + prefix + suffix] = enroll_df[prefix + 'PK' + suffix]
+            summary_df['GRADES_KG_' + prefix + suffix] = enroll_df[prefix + 'KG' + suffix]
 
-        summary_df['GRADES_4_' + prefix] = enroll_df[prefix + '04']
-        summary_df['GRADES_8_' + prefix] = enroll_df[prefix + '08']
-        summary_df['GRADES_12_' + prefix] = enroll_df[prefix + '12']
+        summary_df['GRADES_4_' + prefix + suffix] = enroll_df[prefix + '04' + suffix]
+        summary_df['GRADES_8_' + prefix + suffix] = enroll_df[prefix + '08' + suffix]
+        summary_df['GRADES_12_' + prefix + suffix] = enroll_df[prefix + '12' + suffix]
 
-        summary_df['GRADES_1_8_' + prefix] = enroll_df[prefix + '01'] + enroll_df[prefix + '02'] + \
-                                   enroll_df[prefix + '03'] + enroll_df[prefix + '04'] + \
-                                   enroll_df[prefix + '05'] + enroll_df[prefix + '06'] + \
-                                   enroll_df[prefix + '07'] + enroll_df[prefix + '08']
+        summary_df['GRADES_1_8_' + prefix + suffix] = enroll_df[prefix + '01' + suffix] + enroll_df[prefix + '02' + suffix] + \
+                                   enroll_df[prefix + '03' + suffix] + enroll_df[prefix + '04' + suffix] + \
+                                   enroll_df[prefix + '05' + suffix] + enroll_df[prefix + '06' + suffix] + \
+                                   enroll_df[prefix + '07' + suffix] + enroll_df[prefix + '08' + suffix]
 
-        summary_df['GRADES_9_12_' + prefix] = enroll_df[prefix + '09'] + enroll_df[prefix + '10'] + \
-                                    enroll_df[prefix + '11'] + enroll_df[prefix + '12']
+        summary_df['GRADES_9_12_' + prefix + suffix] = enroll_df[prefix + '09' + suffix] + enroll_df[prefix + '10' + suffix] + \
+                                    enroll_df[prefix + '11' + suffix] + enroll_df[prefix + '12' + suffix]
 
-        summary_df['GRADES_ALL_' + prefix] = summary_df['GRADES_PK_' + prefix] + summary_df['GRADES_1_8_' + prefix] + \
-                                             summary_df['GRADES_9_12_' + prefix]
+        summary_df['GRADES_ALL_' + prefix + suffix] = summary_df['GRADES_PK_' + prefix + suffix] + summary_df['GRADES_1_8_' + prefix + suffix] + \
+                                             summary_df['GRADES_9_12_' + prefix + suffix]
 
+    def race_summary_fixup(prefix):
+        """
+        A schema change in 2009 removed race columns (i.e. 'AS')
+        and introduced race-gender columns (i.e. 'ASF' and 'ASM').
+        This function reaggregates the data in post-2009 spreadsheets
+        to establish consistency.
+        :param prefix:
+        :return:
+        """
+        summary_cols = ['GRADES_PK_' + prefix,
+                        'GRADES_KG_' + prefix,
+                        'GRADES_4_' + prefix,
+                        'GRADES_8_' + prefix,
+                        'GRADES_12_' + prefix,
+                        'GRADES_1_8_' + prefix,
+                        'GRADES_9_12_' + prefix,
+                        'GRADES_ALL_' + prefix]
+
+        for col in summary_cols:
+            # Aggregate of Male + Female counts
+            y = summary_df[col + 'M'] + summary_df[col + 'F']
+
+            # Change null rows into aggregates
+            summary_df[col] = summary_df[col].fillna(y)
+
+    # General summaries
     create_summary_grades('')
 
-    # for race in race_mod:
-    #     create_summary_grades(race)
+    # Race summaries
+    for race in race_mod:
+        create_summary_grades(race)
+
+    # Race and gender summaries
+    for race in race_mod:
+        for gender in gender_mod:
+            create_summary_grades(race, gender)
+
+    # Fixup for race summaries post 2009, see function comments
+    for race in race_mod:
+        race_summary_fixup(race)
+
 
     # Sort
-    summary_df.sort_values(['YEAR', 'STATE'])
+    summary_df.sort_values(['PRIMARY_KEY'])
 
     return summary_df
 
