@@ -10,9 +10,11 @@ import us  # US metadata, like state names
 
 FINANCE_FILENAME = 'finance_states.csv'
 ENROLL_FILENAME = 'enroll_states.csv'
+ENROLL_EXTENDED_FILENAME = 'enroll_states_extended.csv'
 ACHIEVE_FILENAME = 'naep_states.csv'
 
 OUTPUT_FILENAME = 'states_all.csv'
+OUTPUT_EXTENDED_FILENAME = 'states_all_extended.csv'
 
 # State names
 STATES = us.STATES
@@ -34,13 +36,26 @@ def main(logger=None):
     enroll_data = pd.read_csv(ENROLL_FILENAME)
     achieve_data = pd.read_csv(ACHIEVE_FILENAME)
 
-    full = finance_data.merge(enroll_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
+    all_data = finance_data.merge(enroll_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
 
-    full = full.merge(achieve_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
+    all_data = all_data.merge(achieve_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
 
-    full.sort_values(['YEAR', 'STATE'])
+    all_data.sort_values(['YEAR', 'STATE'])
 
-    full.to_csv(OUTPUT_FILENAME, index=False)
+    all_data.to_csv(OUTPUT_FILENAME, index=False)
+
+    # Combine extended data
+    finance_data = pd.read_csv(FINANCE_FILENAME)
+    enroll_data = pd.read_csv(ENROLL_EXTENDED_FILENAME)
+    achieve_data = pd.read_csv(ACHIEVE_FILENAME)
+
+    all_data = finance_data.merge(enroll_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
+
+    all_data = all_data.merge(achieve_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
+
+    all_data.sort_values(['YEAR', 'STATE'])
+
+    all_data.to_csv(OUTPUT_EXTENDED_FILENAME, index=False)
 
 
 if __name__ == '__main__':

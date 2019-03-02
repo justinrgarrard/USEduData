@@ -18,6 +18,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 # The name of the output CSVs
 OUTPUT_FILENAME_BASE = 'enroll_states_base.csv'
 OUTPUT_FILENAME = 'enroll_states.csv'
+OUTPUT_FILENAME_EXTENDED = 'enroll_states_extended.csv'
 
 # The name of the zip file being unpacked
 ZIP_NAME = 'nces_enroll.zip'
@@ -100,7 +101,7 @@ def nces_spreadsheet_to_dataframe(filename, schema, logger=None):
         Fixes for standardizing state names in input data.
         :return:
         """
-        # Standardize 'state name' column
+        # Standardize 'state name' column name
         if data['STATE'].isnull().values.any():
             if data['STATENAME'].isnull().values.any():
                 data['STATE'] = data['STNAME']
@@ -108,22 +109,17 @@ def nces_spreadsheet_to_dataframe(filename, schema, logger=None):
                 data['STATE'] = data['STATENAME']
         data.drop(['STNAME', 'STATENAME'], axis=1)
 
-        # Standardize 'total enrollment' column
-        if True in data['TOTAL'].isnull():
-            data['TOTAL'] = data['MEMBER']
-        data.drop('MEMBER', axis=1)
-
-        # Standardize state names (no abbreviations)
+        # Replace state abbreviations with full name
         if 'AZ' in data['STATE'].values:
             abbr_to_name = us.states.mapping('abbr', 'name')
             for key in abbr_to_name.keys():
                 abbr_to_name[key] = abbr_to_name[key].upper()
             data['STATE'].replace(abbr_to_name, inplace=True)
 
-        # Standardize state names (consistent capitalization)
+        # Enforce consistent capitalization
         data['STATE'] = data['STATE'].apply(lambda x: x.upper())
 
-        # Standardize state names (underscores, not spaces)
+        # Replace spaces with underscores
         data['STATE'] = data['STATE'].apply(lambda x: re.sub(' ', '_', x.strip()))
 
     # Fix whitespace in column names
@@ -137,6 +133,11 @@ def nces_spreadsheet_to_dataframe(filename, schema, logger=None):
     data['SURVYEAR'] = re.findall(numbersonly, filename)[0]
 
     state_name_fixups()
+
+    # Standardize 'total enrollment' column
+    if True in data['TOTAL'].isnull():
+        data['TOTAL'] = data['MEMBER']
+    data.drop('MEMBER', axis=1)
 
     # Drop empty rows
     data = data.dropna(how='all')
@@ -200,16 +201,23 @@ def enroll_summarize_dataframe(enroll_df):
         summary_df['GRADES_8_' + prefix + suffix] = enroll_df[prefix + '08' + suffix]
         summary_df['GRADES_12_' + prefix + suffix] = enroll_df[prefix + '12' + suffix]
 
-        summary_df['GRADES_1_8_' + prefix + suffix] = enroll_df[prefix + '01' + suffix] + enroll_df[prefix + '02' + suffix] + \
-                                   enroll_df[prefix + '03' + suffix] + enroll_df[prefix + '04' + suffix] + \
-                                   enroll_df[prefix + '05' + suffix] + enroll_df[prefix + '06' + suffix] + \
-                                   enroll_df[prefix + '07' + suffix] + enroll_df[prefix + '08' + suffix]
+        summary_df['GRADES_1_8_' + prefix + suffix] = enroll_df[prefix + '01' + suffix] + \
+                                                      enroll_df[prefix + '02' + suffix] + \
+                                                      enroll_df[prefix + '03' + suffix] + \
+                                                      enroll_df[prefix + '04' + suffix] + \
+                                                      enroll_df[prefix + '05' + suffix] + \
+                                                      enroll_df[prefix + '06' + suffix] + \
+                                                      enroll_df[prefix + '07' + suffix] + \
+                                                      enroll_df[prefix + '08' + suffix]
 
-        summary_df['GRADES_9_12_' + prefix + suffix] = enroll_df[prefix + '09' + suffix] + enroll_df[prefix + '10' + suffix] + \
-                                    enroll_df[prefix + '11' + suffix] + enroll_df[prefix + '12' + suffix]
+        summary_df['GRADES_9_12_' + prefix + suffix] = enroll_df[prefix + '09' + suffix] + \
+                                                       enroll_df[prefix + '10' + suffix] + \
+                                                       enroll_df[prefix + '11' + suffix] + \
+                                                       enroll_df[prefix + '12' + suffix]
 
-        summary_df['GRADES_ALL_' + prefix + suffix] = summary_df['GRADES_PK_' + prefix + suffix] + summary_df['GRADES_1_8_' + prefix + suffix] + \
-                                             summary_df['GRADES_9_12_' + prefix + suffix]
+        summary_df['GRADES_ALL_' + prefix + suffix] = summary_df['GRADES_PK_' + prefix + suffix] + \
+                                                      summary_df['GRADES_1_8_' + prefix + suffix] + \
+                                                      summary_df['GRADES_9_12_' + prefix + suffix]
 
     def race_summary_fixup(prefix):
         """
@@ -238,6 +246,7 @@ def enroll_summarize_dataframe(enroll_df):
 
     # General summaries
     create_summary_grades('')
+    simple_summary_df = summary_df.copy(deep=True)
 
     # Race summaries
     for race in race_mod:
@@ -255,7 +264,7 @@ def enroll_summarize_dataframe(enroll_df):
     # Sort
     summary_df.sort_values(['PRIMARY_KEY'])
 
-    return summary_df
+    return simple_summary_df, summary_df
 
 
 def main(logger=None):
@@ -286,8 +295,9 @@ def main(logger=None):
     output.to_csv(OUTPUT_FILENAME_BASE, index=False)
 
     # Summarize the output
-    output = enroll_summarize_dataframe(output)
+    output, output_extended = enroll_summarize_dataframe(output)
     output.to_csv(OUTPUT_FILENAME, index=False)
+    output_extended.to_csv(OUTPUT_FILENAME_EXTENDED, index=False)
 
     # Clean up
     shutil.rmtree(ZIP_NAME.strip('.zip') + '/')
