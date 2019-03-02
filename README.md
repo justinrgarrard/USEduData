@@ -16,7 +16,7 @@ The source data is too large to host on GitHub, but it can be pulled from the co
 The data is broken down into three main categories:
 
 * **Demographics**: 
-A breakdown of students enrolled in schools by school year (TODO: race and gender).
+A breakdown of students enrolled in schools by school year.
 
 * **Financial Status**: 
 A breakdown of states by revenue and expenditure.
@@ -49,6 +49,17 @@ PRIMARY_KEY,STATE,YEAR,GRADES_PK,GRADES_KG,GRADES_4,GRADES_8,GRADES_12,GRADES_1_
 
 * GRADES_ALL: The count of all students in the state. Comparable to ENROLL in the financial data (which is the U.S.
 Census Bureau's estimate for students in the state).
+
+The extended version of states_all contains additional columns that breakdown enrollment by race and gender. For example:
+
+* Grades_ALL_AS: Number of students whose ethnicity was classified as "Asian".
+
+* Grades_ALL_ASM: Number of male students whose ethnicity was classified as "Asian".
+
+* Grades_ALL_ASF: Number of female students whose ethnicity was classified as "Asian".
+
+The represented races include AM (American Indian or Alaska Native), AS (Asian), HI (Hispanic/Latino), BL (Black or African American), WH (White), HP (Hawaiian Native/Pacific Islander), and TR (Two or More Races). The represented genders include M (Male) and F (Female).
+
 
 ### Data: Financials
 
@@ -99,6 +110,10 @@ column 'GRADES_ALL' represents the NCES data value (demographic data). Though th
 correspond on this matter, these values (which are ostensibly the same) do vary. Their documentation chalks this
 up to differences in membership (i.e. what is and is not a fourth grade student).
 
+* Enrollment data from NCES has seen a number of changes across survey years. One of the more notable is that data 
+on student gender does not appear to have been collected until 2009. The information in states_all_extended.csv 
+reflects this.
+
 * NAEP test score data is only available for certain years
 
 * The current version of this data is concerned with state-level patterns. It is the author's hope that future
@@ -126,3 +141,4 @@ for every category, for every year, and for every state.
 ### Version Info
 
 * v0.1: Initial commit.
+* v0.2: Added demographic data for enrollment (race/gender).
