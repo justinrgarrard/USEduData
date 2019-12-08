@@ -129,9 +129,11 @@ def main(logger=None, input_dir=None, output_dir=None):
     # Glue the annual surveys into a single file
     output = pd.concat(record)
 
-    # Write to file as CSV
-    output.to_csv(OUTPUT_FILENAME_BASE, index=False)
+    # Write base data to file as CSV
+    output_path = os.path.join(output_dir, OUTPUT_FILENAME_BASE)
+    output.to_csv(output_path, index=False)
 
+    # Write summary data to file as CSV
     output = naep_summarize_dataframe(output)
     output_path = os.path.join(output_dir, OUTPUT_FILENAME)
     output.to_csv(output_path, index=False)
