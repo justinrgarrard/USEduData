@@ -3,6 +3,7 @@ A script for creating a state summary CSV file from the districts.csv file.
 Should be run after "create_finance_districts_csv.py".
 """
 
+import os
 import pandas as pd
 import sqlite3
 
@@ -43,14 +44,15 @@ query = \
     '''
 
 
-def main(logger=None):
+def main(logger=None, input_dir=None, output_dir=None):
     # Notify user
     logger.debug('Parsing ' + str(INPUT_FILENAME) + '...')
 
     # Create a temporary SQL database populated with district data
     con = sqlite3.connect(':memory:')
     cur = con.cursor()
-    df = pd.read_csv(INPUT_FILENAME)
+    input_data_path = os.path.join(input_dir, INPUT_FILENAME)
+    df = pd.read_csv(input_data_path)
     df.to_sql(name='school_money', con=con, if_exists='replace')
     con.commit()
 
@@ -63,7 +65,8 @@ def main(logger=None):
 
     # Sort
     output.sort_values(['YEAR', 'STATE'])
-    output.to_csv(OUTPUT_FILENAME, index=False)
+    output_path = os.path.join(output_dir, OUTPUT_FILENAME)
+    output.to_csv(output_path, index=False)
 
 
 if __name__ == '__main__':

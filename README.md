@@ -8,8 +8,9 @@ The source data is too large to host on GitHub, but it can be pulled from the co
 ### Usage
 
 1. Download the source data from Kaggle (all the .zip files).
-2. Install the relevant Python packages if necessary (see requirements.txt).
-3. Run main.py to generate output data (all the .csv files).
+2. Place the source data in the input_data/ directory.
+3. Install the relevant Python packages if necessary (see requirements.txt).
+4. Run main.py to generate output data (all the .csv files).
 
 ### Overview
 
@@ -142,3 +143,4 @@ for every category, for every year, and for every state.
 
 * v0.1: Initial commit.
 * v0.2: Added demographic data for enrollment (race/gender).
+* v0.3: Minor usability fixes (input/output directories).

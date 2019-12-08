@@ -3,6 +3,7 @@ A script for creating adding additional data to the states.csv file (such as
 the NAEP data).
 """
 
+import os
 import re
 import numpy as np
 import pandas as pd
@@ -27,14 +28,14 @@ numbersonly = re.compile(r'\d+')
 yr_range = np.arange(1992, 2016, 1)
 
 
-def main(logger=None):
+def main(logger=None, input_dir=None, output_dir=None):
     # Notify user
     logger.debug('Creating aggregate file...')
 
     # Combine data
-    finance_data = pd.read_csv(FINANCE_FILENAME)
-    enroll_data = pd.read_csv(ENROLL_FILENAME)
-    achieve_data = pd.read_csv(ACHIEVE_FILENAME)
+    finance_data = pd.read_csv(os.path.join(input_dir, FINANCE_FILENAME))
+    enroll_data = pd.read_csv(os.path.join(input_dir, ENROLL_FILENAME))
+    achieve_data = pd.read_csv(os.path.join(input_dir, ACHIEVE_FILENAME))
 
     all_data = finance_data.merge(enroll_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
 
@@ -42,12 +43,13 @@ def main(logger=None):
 
     all_data.sort_values(['YEAR', 'STATE'])
 
-    all_data.to_csv(OUTPUT_FILENAME, index=False)
+    output_path = os.path.join(output_dir, OUTPUT_FILENAME)
+    all_data.to_csv(output_path, index=False)
 
     # Combine extended data
-    finance_data = pd.read_csv(FINANCE_FILENAME)
-    enroll_data = pd.read_csv(ENROLL_EXTENDED_FILENAME)
-    achieve_data = pd.read_csv(ACHIEVE_FILENAME)
+    finance_data = pd.read_csv(os.path.join(input_dir, FINANCE_FILENAME))
+    enroll_data = pd.read_csv(os.path.join(input_dir, ENROLL_EXTENDED_FILENAME))
+    achieve_data = pd.read_csv(os.path.join(input_dir, ACHIEVE_FILENAME))
 
     all_data = finance_data.merge(enroll_data, on=['PRIMARY_KEY', 'STATE', 'YEAR'], how='outer')
 
@@ -55,7 +57,8 @@ def main(logger=None):
 
     all_data.sort_values(['YEAR', 'STATE'])
 
-    all_data.to_csv(OUTPUT_EXTENDED_FILENAME, index=False)
+    output_path = os.path.join(output_dir, OUTPUT_EXTENDED_FILENAME)
+    all_data.to_csv(output_path, index=False)
 
 
 if __name__ == '__main__':

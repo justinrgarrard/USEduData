@@ -112,12 +112,13 @@ def naep_summarize_dataframe(naep_df):
     return summary_df
 
 
-def main(logger=None):
+def main(logger=None, input_dir=None, output_dir=None):
     # Unpack the data
-    out = zipfile.ZipFile(ZIP_NAME, 'r')
-    file_list = out.namelist()
-    out.extractall(os.getcwd())
-    out.close()
+    input_data_path = os.path.join(input_dir, ZIP_NAME)
+    input_data = zipfile.ZipFile(input_data_path, 'r')
+    file_list = input_data.namelist()
+    input_data.extractall(os.getcwd())
+    input_data.close()
 
     # Iterate through spreadsheets, extracting data
     record = []
@@ -132,7 +133,8 @@ def main(logger=None):
     output.to_csv(OUTPUT_FILENAME_BASE, index=False)
 
     output = naep_summarize_dataframe(output)
-    output.to_csv(OUTPUT_FILENAME, index=False)
+    output_path = os.path.join(output_dir, OUTPUT_FILENAME)
+    output.to_csv(output_path, index=False)
 
     # Clean up
     for item in file_list:

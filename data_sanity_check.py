@@ -3,16 +3,21 @@ A script that generates a sanity check for the data, logging the null values
 in the aggregated output and exploring where those nulls stem from.
 """
 
+import os
 import pandas as pd
 import pprint
 
+INPUT_FILENAME = 'states_all.csv'
+OUTPUT_FILENAME = 'sanity_check.txt'
 
-def main(logger=None):
+
+def main(logger=None, input_dir=None, output_dir=None):
     logger.debug('Creating data sanity check file...')
-    # Load in data
-    all_df = pd.read_csv('states_all.csv')
-    sanity_check_output = []
 
+    # Load in data
+    input_path = os.path.join(input_dir, INPUT_FILENAME)
+    all_df = pd.read_csv(input_path)
+    sanity_check_output = []
 
     # High Level Overview
     sanity_check_output.append('Data Description:')
@@ -46,7 +51,8 @@ def main(logger=None):
     sanity_check_output.append(pprint.pformat(null_count_dict))
     sanity_check_output.append('\n')
 
-    with open('sanity_check.txt', 'w+') as f:
+    output_path = os.path.join(output_dir, OUTPUT_FILENAME)
+    with open(output_path, 'w+') as f:
         f.writelines(sanity_check_output)
 
 

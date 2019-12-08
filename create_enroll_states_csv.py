@@ -108,6 +108,7 @@ def nces_spreadsheet_to_dataframe(filename, schema, logger=None):
             else:
                 data['STATE'] = data['STATENAME']
         data.drop(['STNAME', 'STATENAME'], axis=1)
+        data['STATE'] = data['STATE'].astype(str)
 
         # Replace state abbreviations with full name
         if 'AZ' in data['STATE'].values:
@@ -267,13 +268,14 @@ def enroll_summarize_dataframe(enroll_df):
     return simple_summary_df, summary_df
 
 
-def main(logger=None):
+def main(logger=None, input_dir=None, output_dir=None):
     # Unpack the data
-    out = zipfile.ZipFile(ZIP_NAME, 'r')
-    file_list = out.namelist()
+    input_data_path = os.path.join(input_dir, ZIP_NAME)
+    input_data = zipfile.ZipFile(input_data_path, 'r')
+    file_list = input_data.namelist()
     file_list.remove(ZIP_NAME.strip('.zip') + '/')
-    out.extractall(os.getcwd())
-    out.close()
+    input_data.extractall(os.getcwd())
+    input_data.close()
 
     # Generate the schema
     schema = gen_schema()
@@ -291,13 +293,18 @@ def main(logger=None):
     # Drop any empty columns
     output = output.dropna(how='all', axis=1)
 
-    # Write to file as CSV
-    output.to_csv(OUTPUT_FILENAME_BASE, index=False)
+    # Write base data to file as CSV
+    output_base_data_path = os.path.join(output_dir, OUTPUT_FILENAME_BASE)
+    output.to_csv(output_base_data_path, index=False)
 
-    # Summarize the output
+    # Write summary data to file as CSV
+    output_summary_data_path = os.path.join(output_dir, OUTPUT_FILENAME)
     output, output_extended = enroll_summarize_dataframe(output)
-    output.to_csv(OUTPUT_FILENAME, index=False)
-    output_extended.to_csv(OUTPUT_FILENAME_EXTENDED, index=False)
+    output.to_csv(output_summary_data_path, index=False)
+
+    # Write extended data to file as CSV
+    output_extended_data_path = os.path.join(output_dir, OUTPUT_FILENAME_EXTENDED)
+    output_extended.to_csv(output_extended_data_path, index=False)
 
     # Clean up
     shutil.rmtree(ZIP_NAME.strip('.zip') + '/')

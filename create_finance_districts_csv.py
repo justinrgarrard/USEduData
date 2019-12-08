@@ -94,13 +94,14 @@ def elsect_spreadsheet_to_dataframe(filename, logger=None):
     return data
 
 
-def main(logger=None):
+def main(logger=None, input_dir=None, output_dir=None):
     # Unpack the data
-    out = zipfile.ZipFile(ZIP_NAME, 'r')
-    file_list = out.namelist()
+    input_data_path = os.path.join(input_dir, ZIP_NAME)
+    input_data = zipfile.ZipFile(input_data_path, 'r')
+    file_list = input_data.namelist()
     file_list.remove('elsect/')
-    out.extractall(os.getcwd())
-    out.close()
+    input_data.extractall(os.getcwd())
+    input_data.close()
 
     # Iterate through spreadsheets, extracting data
     record = []
@@ -112,10 +113,11 @@ def main(logger=None):
     output = pd.concat(record)
 
     # Write to file as CSV
-    output.to_csv(OUTPUT_FILENAME, index=False)
+    output_path = os.path.join(output_dir, OUTPUT_FILENAME)
+    output.to_csv(output_path, index=False)
 
     # Clean up
-    shutil.rmtree('elsect/')
+    shutil.rmtree(ZIP_NAME.strip('.zip') + '/')
 
 
 if __name__ == '__main__':
