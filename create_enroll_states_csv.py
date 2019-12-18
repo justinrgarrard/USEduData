@@ -15,9 +15,7 @@ import shutil
 pd.options.mode.chained_assignment = None  # default='warn'
 
 # The name of the output CSVs
-OUTPUT_FILENAME_BASE = 'enroll_states_base.csv'
-OUTPUT_FILENAME = 'enroll_states.csv'
-OUTPUT_FILENAME_EXTENDED = 'enroll_states_extended.csv'
+OUTPUT_FILENAME = 'enroll_states_raw.csv'
 
 # The name of the zip file being unpacked
 ZIP_NAME = 'NCES_ENROLL_STATES.zip'
@@ -35,6 +33,11 @@ surveyyear = re.compile(r'\d\d\d\d')
 grade_map = {
     'prekindergarten': 'PK',
     'kindergarten': 'KG',
+    'grades 1-8': 'G01-G08',
+    'grades 9-12': 'G09-G12',
+    'grade 10': 'G10',
+    'grade 11': 'G11',
+    'grade 12': 'G12',
     'grade 1': 'G01',
     'grade 2': 'G02',
     'grade 3': 'G03',
@@ -43,10 +46,7 @@ grade_map = {
     'grade 6': 'G06',
     'grade 7': 'G07',
     'grade 8': 'G08',
-    'grade 9': 'G09',
-    'grade 10': 'G10',
-    'grade 11': 'G11',
-    'grade 12': 'G12'}
+    'grade 9': 'G09'}
 
 race_map = {
     'indian': 'AM',
@@ -69,7 +69,7 @@ def label_fixup(label_str):
         return 'State Name'
 
     label_str = label_str.lower()
-    # print(label_str)
+    print(label_str)
 
     # Survey Year
     year_str = 'Y?'
@@ -78,29 +78,32 @@ def label_fixup(label_str):
         year_str = match.group(0)
 
     # Grade
-    grade_str = 'G?'
+    # Default to A for All
+    grade_str = 'A'
     for key in grade_map.keys():
         if key in label_str:
             grade_str = grade_map[key]
             break
 
     # Race
-    race_str = 'R?'
+    # Default to A for All
+    race_str = 'A'
     for key in race_map.keys():
         if key in label_str:
             race_str = race_map[key]
             break
 
     # Gender
+    # Default to A for All
     if 'female' in label_str:
         gender_str = 'F'
     elif 'male' in label_str:
         gender_str = 'M'
     else:
-        gender_str = 'S?'
+        gender_str = 'A'
 
     # Pull it all together
-    # print('{0}_{1}_{2}_{3}'.format(year_str, grade_str, race_str, gender_str))
+    print('{0}_{1}_{2}_{3}'.format(year_str, grade_str, race_str, gender_str))
     return '{0}_{1}_{2}_{3}'.format(year_str, grade_str, race_str, gender_str)
 
 
@@ -118,18 +121,37 @@ def main(logger=None, input_dir=None, output_dir=None):
     for item in file_list:
         if '/.' not in item:
             # Read in the input file, skipping the first six rows and last seven rows
-            # This chops off the unnecessary header and footer
+            # This chops off the header and footer text
             df = pd.read_csv(item, skiprows=6, skipfooter=7, engine='python')
 
             # Fix the column headers
             df.rename(mapper=label_fixup, axis=1, inplace=True)
-            print(df)
+            # print(df)
 
             # Append it to the join list
             df_list.append(df)
 
-    # output_df = pd.concat(df_list)
-    # print(output_df)
+    # Merge the dataframes
+    output_df = pd.concat(df_list, axis=1)
+
+    # Remove duplicates
+    output_df = output_df.loc[:, ~output_df.columns.duplicated()]
+
+    # Sort the column names
+    column_names = output_df.columns.tolist()
+    column_names = sorted(list(set(column_names)))
+
+    # Place 'State Name' as first column
+    column_names.remove('State Name')
+    column_names.insert(0, 'State Name')
+
+    output_df = output_df[column_names]
+    print(output_df)
+    print(output_df.columns)
+
+    # Output as file
+    output_data_path = os.path.join(output_dir, OUTPUT_FILENAME)
+    output_df.to_csv(output_data_path, index=False)
 
     # Clean up
     shutil.rmtree(ZIP_NAME.strip('.zip') + '/')
