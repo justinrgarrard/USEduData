@@ -10,8 +10,8 @@ import pandas as pd
 import us  # US metadata, like state names
 
 FINANCE_FILENAME = 'finance_states.csv'
-ENROLL_FILENAME = 'enroll_states.csv'
-ENROLL_EXTENDED_FILENAME = 'enroll_states_extended.csv'
+ENROLL_FILENAME = 'enroll_states_summary.csv'
+ENROLL_EXTENDED_FILENAME = 'enroll_states.csv'
 ACHIEVE_FILENAME = 'naep_states.csv'
 
 OUTPUT_FILENAME = 'states_all.csv'

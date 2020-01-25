@@ -9,6 +9,7 @@ import create_finance_states_csv
 import create_naep_states_csv
 import create_enroll_states_raw_csv
 import create_enroll_states_csv
+import create_enroll_states_summary_csv
 import create_enroll_states_legacy_csv
 import create_states_all_csv
 import data_sanity_check
@@ -33,11 +34,12 @@ LOGGER.info('Starting data processing...')
 
 # Create a summary file from the NCES data
 # create_enroll_states_raw_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR)
-create_enroll_states_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR)
+# create_enroll_states_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR)
+# create_enroll_states_summary_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR)
 # enroll_sanity_check.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR)
 
 # Create a denormalized file from all the data
-# create_states_all_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR)
+create_states_all_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR)
 # data_sanity_check.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR)
 
 LOGGER.info('Data processing complete!')
