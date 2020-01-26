@@ -72,13 +72,14 @@ def summarize_enroll_data(input_df):
 
 
 def main(logger=None, input_dir=None, output_dir=None):
+    # Notify user
+    logger.debug('Parsing ' + str(INPUT_FILENAME) + '...')
+
     # Unpack the data
     input_data = pd.read_csv(os.path.join(input_dir, INPUT_FILENAME))
-    print(input_data)
 
     # Transform the data (YEAR_STATE format)
     output_df = summarize_enroll_data(input_data)
-    print(output_df)
 
     # Output as file
     output_data_path = os.path.join(output_dir, OUTPUT_FILENAME)

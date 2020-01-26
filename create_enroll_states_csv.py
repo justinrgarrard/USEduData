@@ -103,6 +103,9 @@ def restructure_enroll_data(input_df):
 
 
 def main(logger=None, input_dir=None, output_dir=None):
+    # Notify user
+    logger.debug('Parsing ' + str(INPUT_FILENAME) + '...')
+
     # Unpack the data
     input_data = pd.read_csv(os.path.join(input_dir, INPUT_FILENAME))
 

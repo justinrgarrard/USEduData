@@ -69,7 +69,6 @@ def label_fixup(label_str):
         return 'State Name'
 
     label_str = label_str.lower()
-    print(label_str)
 
     # Survey Year
     year_str = 'Y?'
@@ -103,7 +102,6 @@ def label_fixup(label_str):
         gender_str = 'A'
 
     # Pull it all together
-    print('{0}_{1}_{2}_{3}'.format(year_str, grade_str, race_str, gender_str))
     return '{0}_{1}_{2}_{3}'.format(year_str, grade_str, race_str, gender_str)
 
 
@@ -120,6 +118,9 @@ def main(logger=None, input_dir=None, output_dir=None):
     df_list = []
     for item in file_list:
         if '/.' not in item:
+            # Notify user
+            logger.debug('Parsing ' + str(item) + '...')
+
             # Read in the input file, skipping the first six rows and last seven rows
             # This chops off the header and footer text
             df = pd.read_csv(item, skiprows=6, skipfooter=7, engine='python')
@@ -146,8 +147,6 @@ def main(logger=None, input_dir=None, output_dir=None):
     column_names.insert(0, 'State Name')
 
     output_df = output_df[column_names]
-    print(output_df)
-    print(output_df.columns)
 
     # Output as file
     output_data_path = os.path.join(output_dir, OUTPUT_FILENAME)
