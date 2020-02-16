@@ -154,6 +154,10 @@ def main(logger=None, input_dir=None, output_dir=None):
 
     output_df = output_df[column_names]
 
+    # Handle whitespace issues related to district names in source data
+    output_df['Agency Name'] = output_df[['Agency Name']].applymap(lambda x: str(x).strip())
+    output_df.drop_duplicates(subset='Agency Name', inplace=True)
+
     # Output as file
     output_data_path = os.path.join(output_dir, OUTPUT_FILENAME)
     output_df.to_csv(output_data_path, index=False)

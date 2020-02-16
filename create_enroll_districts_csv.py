@@ -57,17 +57,11 @@ def restructure_enroll_data(input_df):
     year_range = sorted(list(set(year_range)))
 
     # Drop districts w/ no associated State Name
-    nulls = input_df['State Name'].isnull().sum()
-    print(nulls)
     input_df = input_df[input_df['State Name'].notna()]
-    nulls = input_df['State Name'].isnull().sum()
-    print(nulls)
 
     # Combine districts and states into a single column
-    input_df['district_key_series'] = input_df['Agency Name'] + ' ' + input_df['State Name']
-    # print(district_key_series)
+    input_df['district_key_series'] = input_df['Agency Name'] + '_' + input_df['State Name']
     district_list = sorted(list(set(input_df['district_key_series'].to_list())))
-    # print(district_list)
 
     # For each district and year, create a primary key
     output_df = pd.DataFrame()
@@ -104,9 +98,6 @@ def restructure_enroll_data(input_df):
         target_col_data = output_df[['DISTRICT', 'YEAR', target_col]]
         target_col_data = target_col_data[(target_col_data['YEAR'].str.contains(year))]
 
-        print(column_data)
-        print(target_col_data)
-
         ## Avoid dealing with index issues by converting to list
         target_col_data[target_col] = column_data[col_name].to_list()
 
@@ -125,7 +116,7 @@ def main(logger=None, input_dir=None, output_dir=None):
     # Unpack the data
     input_data = pd.read_csv(os.path.join(input_dir, INPUT_FILENAME))
 
-    # Transform the data (YEAR_STATE format)
+    # Transform the data (YEAR_DISTRICT_STATE format)
     output_df = restructure_enroll_data(input_data)
 
     # Output as file
