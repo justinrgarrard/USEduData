@@ -6,6 +6,7 @@ Should be run after "create_finance_districts_csv.py".
 import os
 import pandas as pd
 import sqlite3
+import data_sanity_check
 
 INPUT_FILENAME = 'finance_districts.csv'
 OUTPUT_FILENAME = 'finance_states.csv'
@@ -44,7 +45,7 @@ query = \
     '''
 
 
-def main(logger=None, input_dir=None, output_dir=None):
+def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     # Notify user
     logger.debug('Parsing ' + str(INPUT_FILENAME) + '...')
 
@@ -65,8 +66,13 @@ def main(logger=None, input_dir=None, output_dir=None):
 
     # Sort
     output.sort_values(['YEAR', 'STATE'])
+
+    # Output
     output_path = os.path.join(output_dir, OUTPUT_FILENAME)
     output.to_csv(output_path, index=False)
+
+    # Sanity check
+    data_sanity_check.main(logger, output_dir, sanity_dir, OUTPUT_FILENAME, count_year_nulls=True)
 
 
 if __name__ == '__main__':

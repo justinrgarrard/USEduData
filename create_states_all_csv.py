@@ -8,6 +8,7 @@ import re
 import numpy as np
 import pandas as pd
 import us  # US metadata, like state names
+import data_sanity_check
 
 FINANCE_FILENAME = 'finance_states.csv'
 ENROLL_FILENAME = 'enroll_states_summary.csv'
@@ -28,7 +29,7 @@ numbersonly = re.compile(r'\d+')
 yr_range = np.arange(1992, 2016, 1)
 
 
-def main(logger=None, input_dir=None, output_dir=None):
+def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     # Notify user
     logger.debug('Creating aggregate file...')
 
@@ -59,6 +60,9 @@ def main(logger=None, input_dir=None, output_dir=None):
 
     output_path = os.path.join(output_dir, OUTPUT_EXTENDED_FILENAME)
     all_data.to_csv(output_path, index=False)
+
+    # Sanity check
+    data_sanity_check.main(logger, output_dir, sanity_dir, OUTPUT_FILENAME, count_year_nulls=True)
 
 
 if __name__ == '__main__':

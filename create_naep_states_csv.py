@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import xlrd  # Support for older excel files, used by pd
 import us  # US metadata, like state names
+import data_sanity_check
 
 
 OUTPUT_FILENAME_BASE = 'naep_states_base.csv'
@@ -112,7 +113,7 @@ def naep_summarize_dataframe(naep_df):
     return summary_df
 
 
-def main(logger=None, input_dir=None, output_dir=None):
+def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     # Unpack the data
     input_data_path = os.path.join(input_dir, ZIP_NAME)
     input_data = zipfile.ZipFile(input_data_path, 'r')
@@ -141,6 +142,9 @@ def main(logger=None, input_dir=None, output_dir=None):
     # Clean up
     for item in file_list:
         os.remove(item)
+
+    # Sanity check
+    data_sanity_check.main(logger, output_dir, sanity_dir, OUTPUT_FILENAME, count_year_nulls=True)
 
 
 if __name__ == '__main__':

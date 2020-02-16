@@ -7,51 +7,53 @@ import os
 import pandas as pd
 import pprint
 
-INPUT_FILENAME = 'states_all.csv'
-OUTPUT_FILENAME = 'sanity_check.txt'
+# INPUT_FILENAME = 'states_all.csv'
+# OUTPUT_FILENAME = 'sanity_check.txt'
 
 
-def main(logger=None, input_dir=None, output_dir=None):
+def main(logger=None, input_dir=None, output_dir=None, input_filename=None, count_year_nulls=False, year_label='YEAR'):
     logger.debug('Creating data sanity check file...')
 
     # Load in data
-    input_path = os.path.join(input_dir, INPUT_FILENAME)
-    all_df = pd.read_csv(input_path)
+    input_path = os.path.join(input_dir, input_filename)
+    input_df = pd.read_csv(input_path)
     sanity_check_output = []
 
     # High Level Overview
     sanity_check_output.append('Data Description:')
     sanity_check_output.append('\n')
-    sanity_check_output.append(all_df.describe().to_csv())
+    sanity_check_output.append(input_df.describe().to_csv())
     sanity_check_output.append('\n')
 
     sanity_check_output.append('Null Counts')
     sanity_check_output.append('\n')
-    for col in all_df.columns:
-        nulls = all_df[col].isnull().sum()
+    for col in input_df.columns:
+        nulls = input_df[col].isnull().sum()
         sanity_check_output.append(col + ': ' + str(nulls))
         sanity_check_output.append('\n')
     sanity_check_output.append('\n')
 
     # Nulls for total revenue (usually U.S. territories where the data wasn't available)
-    sanity_check_output.append('Nulls in Total Revenue')
-    sanity_check_output.append('\n')
-    null_rev = all_df[all_df['TOTAL_REVENUE'].isnull()].sort_values(by=['YEAR'])
-    sanity_check_output.append(null_rev.to_csv())
-    sanity_check_output.append('\n')
+    # sanity_check_output.append('Nulls in Total Revenue')
+    # sanity_check_output.append('\n')
+    # null_rev = input_df[input_df['TOTAL_REVENUE'].isnull()].sort_values(by=['YEAR'])
+    # sanity_check_output.append(null_rev.to_csv())
+    # sanity_check_output.append('\n')
 
     # Nulls by years
-    null_count_dict = {}
-    for year in all_df['YEAR'].unique():
-        null_count_dict[year] = {}
-        yr_df = all_df[all_df['YEAR'] == year]
-        for col in all_df.columns:
-            nulls = yr_df[col].isnull().sum()
-            null_count_dict[year][col] = nulls
-    sanity_check_output.append(pprint.pformat(null_count_dict))
-    sanity_check_output.append('\n')
+    if count_year_nulls:
+        null_count_dict = {}
+        for year in input_df[year_label].unique():
+            null_count_dict[year] = {}
+            yr_df = input_df[input_df[year_label] == year]
+            for col in input_df.columns:
+                nulls = yr_df[col].isnull().sum()
+                null_count_dict[year][col] = nulls
+        sanity_check_output.append(pprint.pformat(null_count_dict))
+        sanity_check_output.append('\n')
 
-    output_path = os.path.join(output_dir, OUTPUT_FILENAME)
+    output_filename = f'sanity_check_{input_filename}'
+    output_path = os.path.join(output_dir, output_filename)
     with open(output_path, 'w+') as f:
         f.writelines(sanity_check_output)
 

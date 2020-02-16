@@ -10,6 +10,7 @@ import pandas as pd
 import xlrd  # Support for older excel files, used by pd
 import us  # US metadata, like state names
 import shutil
+import data_sanity_check
 
 # Disable warnings for Pandas dataframe assignments
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -108,7 +109,7 @@ def label_fixup(label_str):
     return '{0}_{1}_{2}_{3}'.format(year_str, grade_str, race_str, gender_str)
 
 
-def main(logger=None, input_dir=None, output_dir=None):
+def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     # Unpack the data
     input_data_path = os.path.join(input_dir, ZIP_NAME)
     input_data = zipfile.ZipFile(input_data_path, 'r')
@@ -161,6 +162,9 @@ def main(logger=None, input_dir=None, output_dir=None):
     # Output as file
     output_data_path = os.path.join(output_dir, OUTPUT_FILENAME)
     output_df.to_csv(output_data_path, index=False)
+
+    # Sanity check
+    data_sanity_check.main(logger, output_dir, sanity_dir, OUTPUT_FILENAME)
 
     # Clean up
     shutil.rmtree(ZIP_NAME.strip('.zip') + '/')

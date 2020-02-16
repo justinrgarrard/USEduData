@@ -10,6 +10,7 @@ import pandas as pd
 import xlrd  # Support for older excel files, used by pd
 import us  # US metadata, like state names
 import shutil
+import data_sanity_check
 
 # The name of the output CSV
 OUTPUT_FILENAME = 'finance_districts.csv'
@@ -94,7 +95,7 @@ def elsect_spreadsheet_to_dataframe(filename, logger=None):
     return data
 
 
-def main(logger=None, input_dir=None, output_dir=None):
+def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     # Unpack the data
     input_data_path = os.path.join(input_dir, ZIP_NAME)
     input_data = zipfile.ZipFile(input_data_path, 'r')
@@ -115,6 +116,9 @@ def main(logger=None, input_dir=None, output_dir=None):
     # Write to file as CSV
     output_path = os.path.join(output_dir, OUTPUT_FILENAME)
     output.to_csv(output_path, index=False)
+
+    # Sanity check
+    data_sanity_check.main(logger, output_dir, sanity_dir, OUTPUT_FILENAME, year_label='YRDATA')
 
     # Clean up
     shutil.rmtree(ZIP_NAME.strip('.zip') + '/')

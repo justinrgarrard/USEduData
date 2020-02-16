@@ -11,6 +11,8 @@ A place to track development objectives.
 * Input/Output Staging Directories
 * Refactored NCES to Use ["Table Generator"](https://nces.ed.gov/ccd/elsi/tableGenerator.aspx) 
 instead of raw spreadsheets
+* Capture school district data from NCES
+* Added sanity checks for all data files
 
 ### To-Do
 
@@ -19,7 +21,6 @@ instead of raw spreadsheets
 * Capture financial data from NCES, moving away from the Census Bureau
 * Capture faculty data from NCES
 * Capture dropout/completion data from NCES
-* Capture school district data from NCES
 * Capture school district data from NAEP
 * Standardize pipelines (maybe use a solid design pattern?)
 * Incorporate the NCES-provided tip sheets for using their data

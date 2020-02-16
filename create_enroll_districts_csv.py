@@ -10,6 +10,7 @@ import pandas as pd
 import xlrd  # Support for older excel files, used by pd
 import us  # US metadata, like state names
 import shutil
+import data_sanity_check
 
 # Disable warnings for Pandas dataframe assignments
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -109,7 +110,7 @@ def restructure_enroll_data(input_df):
     return output_df
 
 
-def main(logger=None, input_dir=None, output_dir=None):
+def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     # Notify user
     logger.debug('Parsing ' + str(INPUT_FILENAME) + '...')
 
@@ -122,6 +123,9 @@ def main(logger=None, input_dir=None, output_dir=None):
     # Output as file
     output_data_path = os.path.join(output_dir, OUTPUT_FILENAME)
     output_df.to_csv(output_data_path, index=False)
+
+    # Sanity check
+    data_sanity_check.main(logger, output_dir, sanity_dir, OUTPUT_FILENAME, count_year_nulls=True)
 
 
 if __name__ == '__main__':
