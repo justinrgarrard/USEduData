@@ -144,3 +144,4 @@ for every category, for every year, and for every state.
 * v0.1: Initial commit.
 * v0.2: Added demographic data for enrollment (race/gender).
 * v0.3: Minor usability fixes (input/output directories).
+* v0.4: Reworked the NCES data pipeline.
