@@ -7,9 +7,6 @@ import os
 import pandas as pd
 import pprint
 
-# INPUT_FILENAME = 'states_all.csv'
-# OUTPUT_FILENAME = 'sanity_check.txt'
-
 
 def main(logger=None, input_dir=None, output_dir=None, input_filename=None, count_year_nulls=False, year_label='YEAR'):
     logger.debug('Creating data sanity check file...')
@@ -32,13 +29,6 @@ def main(logger=None, input_dir=None, output_dir=None, input_filename=None, coun
         sanity_check_output.append(col + ': ' + str(nulls))
         sanity_check_output.append('\n')
     sanity_check_output.append('\n')
-
-    # Nulls for total revenue (usually U.S. territories where the data wasn't available)
-    # sanity_check_output.append('Nulls in Total Revenue')
-    # sanity_check_output.append('\n')
-    # null_rev = input_df[input_df['TOTAL_REVENUE'].isnull()].sort_values(by=['YEAR'])
-    # sanity_check_output.append(null_rev.to_csv())
-    # sanity_check_output.append('\n')
 
     # Nulls by years
     if count_year_nulls:
