@@ -24,3 +24,4 @@ instead of raw spreadsheets
 * Standardize pipelines (maybe use a solid design pattern?)
 * Incorporate the NCES-provided tip sheets for using their data
 * Add enrichments to the final data (account for inflation, add [regions](https://ies.ed.gov/ncee/edlabs/about/), etc.)
+* Simplify the process of adding data for subsequent years

@@ -103,9 +103,6 @@ PRIMARY_KEY,STATE,YEAR,AVG_MATH_4_SCORE,AVG_MATH_8_SCORE,AVG_READING_4_SCORE,AVG
 
 ### Methodological Notes
 
-* Spreadsheets for NCES enrollment data for 2014, 2011, 2010, and 2009 
-were modified to place key data on the same sheet, making scripting easier.
-
 * The column 'ENROLL' represents the U.S. Census Bureau data value (financial data), while the
 column 'GRADES_ALL' represents the NCES data value (demographic data). Though the two organizations
 correspond on this matter, these values (which are ostensibly the same) do vary. Their documentation chalks this
@@ -114,6 +111,10 @@ up to differences in membership (i.e. what is and is not a fourth grade student)
 * Enrollment data from NCES has seen a number of changes across survey years. One of the more notable is that data 
 on student gender does not appear to have been collected until 2009. The information in states_all_extended.csv 
 reflects this.
+
+* NCES data is difficult to pull from their provided Table Generator tool. Trying to draw too large
+an amount of data will cause their web system to timeout. As such, the input files are chunked into subsets 
+(i.e. NCES_G_1_4.csv).
 
 * NAEP test score data is only available for certain years
 
