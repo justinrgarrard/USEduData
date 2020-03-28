@@ -4,4 +4,5 @@ Place input data files here.
 
 * elsect.zip
 * NDE.zip
-* nces_enroll.zip
+* NCES_ENROLL_STATES.zip
+* NCES_ENROLL_DISTRICTS.zip

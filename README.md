@@ -7,10 +7,8 @@ The source data is too large to host on GitHub, but it can be pulled from the co
 
 ### Usage
 
-1. Download the source data from Kaggle (all the .zip files).
-2. Place the source data in the input_data/ directory.
-3. Install the relevant Python packages if necessary (see requirements.txt).
-4. Run main.py to generate output data (all the .csv files).
+1. Install the relevant Python packages if necessary (see requirements.txt).
+2. Run main.py to generate output data.
 
 ### Overview
 
@@ -146,3 +144,4 @@ for every category, for every year, and for every state.
 * v0.2: Added demographic data for enrollment (race/gender).
 * v0.3: Minor usability fixes (input/output directories).
 * v0.4: Reworked the NCES data pipeline.
+* v0.41: Adopted git-lfs to store input data
