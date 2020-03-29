@@ -26,3 +26,4 @@ instead of raw spreadsheets
 * Incorporate the NCES-provided tip sheets for using their data
 * Add enrichments to the final data (account for inflation, add [regions](https://ies.ed.gov/ncee/edlabs/about/), etc.)
 * Simplify the process of adding data for subsequent years
+    * (Since there aren't any decent API's, maybe build a Selenium web scraper?)
