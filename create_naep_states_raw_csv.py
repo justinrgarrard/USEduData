@@ -5,6 +5,7 @@ data on states into a single CSV file.
 
 import re
 import zipfile
+import shutil
 import os
 import numpy as np
 import pandas as pd
@@ -98,8 +99,7 @@ def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     output.to_csv(output_path, index=False)
 
     # Clean up
-    for item in file_list:
-        os.remove(item)
+    shutil.rmtree(ZIP_NAME.strip('.zip') + '/')
 
     # Sanity check
     data_sanity_check.main(logger, output_dir, sanity_dir, OUTPUT_FILENAME, count_year_nulls=True)
