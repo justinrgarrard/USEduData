@@ -6,6 +6,7 @@ import os
 import logging
 import create_finance_districts_csv
 import create_finance_states_csv
+import create_naep_states_raw_csv
 import create_naep_states_csv
 import create_enroll_districts_raw_csv
 import create_enroll_districts_csv
@@ -35,7 +36,8 @@ LOGGER.info('Starting data processing...')
 ## District
 
 ## State
-create_naep_states_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+create_naep_states_raw_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+create_naep_states_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 
 # Create a summary file from the NCES data
 ## District
