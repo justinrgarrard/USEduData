@@ -27,9 +27,9 @@ LOGGER.info('Starting data processing...')
 
 # Create district and state summary files
 ## District
-create_finance_districts_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_finance_districts_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 ## State
-create_finance_states_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_finance_states_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 
 # Create a summary file from the NAEP data
 ## District
@@ -39,19 +39,19 @@ create_naep_states_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 
 # Create a summary file from the NCES data
 ## District
-create_enroll_districts_raw_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
-create_enroll_districts_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_enroll_districts_raw_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_enroll_districts_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 
 ## State
-create_enroll_states_raw_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
-create_enroll_states_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
-create_enroll_states_summary_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_enroll_states_raw_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_enroll_states_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_enroll_states_summary_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 
 # Create a summary file from all the data
 ## District
 
 ## State
-create_states_all_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_states_all_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 
 LOGGER.info('Data processing complete!')
 

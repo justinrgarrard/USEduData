@@ -17,7 +17,7 @@ OUTPUT_FILENAME_BASE = 'naep_states_base.csv'
 OUTPUT_FILENAME = 'naep_states.csv'
 
 # The name of the zip file being unpacked
-ZIP_NAME = 'NDE.zip'
+ZIP_NAME = 'NAEP_ASSESS_STATES.zip'
 
 # Schema used for the NAEP data files
 NDE_SCHEMA = ['YEAR',
@@ -46,13 +46,18 @@ def nde_spreadsheet_to_dataframe(filename, logger=None):
     logger.debug('Parsing ' + str(filename) + '...')
 
     # Open the file, parse it, and truncate the highlights
-    data = pd.read_excel(filename, sheet_name=1, dtype=str)
+    data = pd.read_excel(filename, dtype=str, skiprows=8, skipfooter=7)
     data = data.rename(index=str, columns={'Year': 'YEAR',
                                            'Jurisdiction': 'STATE',
                                            'All students': 'DEMO',
+                                           'Gender': 'DEMO',
+                                           'Status as English Language Learner, 2 categories': 'DEMO',
+                                           'Race/ethnicity used to report trends, school-reported': 'DEMO',
+                                           'Race/ethnicity using 2011 guidelines, school-reported': 'DEMO',
                                            'Average scale score': 'AVG_SCORE'})
+    filename = filename.split('/')[1]
     data['TEST_SUBJECT'] = filename.split('_')[1]
-    data['TEST_YEAR'] = filename.split('_')[2].strip('.Xls')
+    data['TEST_YEAR'] = filename.split('_')[2].replace('G', '')
 
     # Clean up the year by removing the superscript
     data['YEAR'] = data['YEAR'].apply(lambda x: x[:4])
@@ -64,12 +69,13 @@ def nde_spreadsheet_to_dataframe(filename, logger=None):
     data['STATE'] = data['STATE'].apply(lambda x: re.sub(' ', '_', x.strip()))
 
     # Drop the unused demographic column
-    data = data.drop('DEMO', axis=1)
+    # data = data.drop('DEMO', axis=1)
 
     # Cast appropriate columns to numbers, removing non-number symbols
-    for column in data.columns:
-        if column not in ['STATE', 'YEAR', 'TEST_SUBJECT', 'TEST_YEAR']:
-            data[column] = pd.to_numeric(data[column], errors='coerce')
+    data['AVG_SCORE'] = pd.to_numeric(data['AVG_SCORE'], errors='coerce')
+    # for column in data.columns:
+    #     if column not in ['STATE', 'YEAR', 'TEST_SUBJECT', 'TEST_YEAR']:
+    #         data[column] = pd.to_numeric(data[column], errors='coerce')
 
     return data
 
@@ -118,6 +124,7 @@ def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     input_data_path = os.path.join(input_dir, ZIP_NAME)
     input_data = zipfile.ZipFile(input_data_path, 'r')
     file_list = input_data.namelist()
+    file_list.remove(ZIP_NAME.strip('.zip') + '/')
     input_data.extractall(os.getcwd())
     input_data.close()
 
