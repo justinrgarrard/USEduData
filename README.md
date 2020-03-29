@@ -2,7 +2,7 @@
 
 A compilation of several education databases, summarized into a single file (states_all.csv).
 
-The source data is too large to host on GitHub, but it can be pulled from the corresponding Kaggle 
+Generated outputs are stored on Kaggle
 [link](https://www.kaggle.com/noriuk/us-education-datasets-unification-project/home).
 
 ### Usage
