@@ -24,12 +24,65 @@ NDE_SCHEMA = ['YEAR',
               'DEMO',
               'AVERAGE_SCORE']
 
+# Mapping for race abbreviations
+race_map = {
+    'indian': 'AM',
+    'asian': 'AS',
+    'hispanic': 'HI',
+    'black': 'BL',
+    'white': 'WH',
+    'hawaiian': 'HP',
+    'two or more': 'TR'}
+
 # State names
 STATES = us.STATES
 
 # Useful regular expressions
 doublespace = re.compile(r'  ')
 numbersonly = re.compile(r'\d+')
+surveyyear = re.compile(r'\d\d\d\d')
+
+
+def label_fixup(label_str):
+    """
+    Simplifies NAEP demographic labels to a more user-friendly format.
+
+    :param label_str:
+    :return:
+    """
+    # if 'State Name' in label_str:
+    #     return 'State Name'
+    #
+    # if 'Agency Name' in label_str:
+    #     return 'Agency Name'
+
+    label_str = label_str.lower()
+
+    # Survey Year
+    # year_str = 'Y?'
+    # match = surveyyear.search(label_str)
+    # if match:
+    #     year_str = match.group(0)
+
+    # Race
+    # Default to A for All
+    race_str = 'A'
+    for key in race_map.keys():
+        if key in label_str:
+            race_str = race_map[key]
+            break
+
+    # Gender
+    # Default to A for All
+    if 'female' in label_str:
+        gender_str = 'F'
+    elif 'male' in label_str:
+        gender_str = 'M'
+    else:
+        gender_str = 'A'
+
+    # Pull it all together
+    return '{0}_{1}'.format(race_str, gender_str)
 
 
 def nde_spreadsheet_to_dataframe(filename, logger=None):
@@ -67,8 +120,15 @@ def nde_spreadsheet_to_dataframe(filename, logger=None):
     # Replace spaces with underscore in state names
     data['STATE'] = data['STATE'].apply(lambda x: re.sub(' ', '_', x.strip()))
 
-    # Drop the unused demographic column
-    # data = data.drop('DEMO', axis=1)
+    # Format the demographic column
+    ## Swap out race/gender strings
+    data['DEMO'] = data['DEMO'].apply(lambda x: label_fixup(x))
+
+    ## Prepend grade
+    data['DEMO'] = 'G0' + data['TEST_YEAR'] + '_' + data['DEMO']
+
+    ## Prepend survey year
+    data['DEMO'] = data['YEAR'] + '_' + data['DEMO']
 
     # Cast appropriate columns to numbers, removing non-number symbols
     data['AVG_SCORE'] = pd.to_numeric(data['AVG_SCORE'], errors='coerce')
