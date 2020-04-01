@@ -42,12 +42,17 @@ def naep_summarize_dataframe(naep_df):
     # Cast appropriate columns to strings
     naep_df['TEST_YEAR'] = naep_df['TEST_YEAR'].astype('str')
 
-    # We only want one of these per every test
-    summary_df['STATE'] = naep_df[(naep_df['TEST_SUBJECT'].str.contains('Mathematics')) &
-                                  (naep_df['TEST_YEAR'].str.contains('4'))]['STATE']
+    # Basic info
+    summary_df['STATE'] = naep_df['STATE']
+    summary_df['YEAR'] = naep_df['YEAR']
+    summary_df['DEMO'] = naep_df['DEMO']
 
-    summary_df['YEAR'] = naep_df[(naep_df['TEST_SUBJECT'].str.contains('Mathematics')) &
-                                 (naep_df['TEST_YEAR'].str.contains('4'))]['YEAR']
+    # We only want one of these per every test
+    # summary_df['STATE'] = naep_df[(naep_df['TEST_SUBJECT'].str.contains('Mathematics')) &
+    #                               (naep_df['TEST_YEAR'].str.contains('4'))]['STATE']
+    #
+    # summary_df['YEAR'] = naep_df[(naep_df['TEST_SUBJECT'].str.contains('Mathematics')) &
+    #                              (naep_df['TEST_YEAR'].str.contains('4'))]['YEAR']
 
     # We want an entry for each subject/year combination
     summary_df['AVG_MATH_4_SCORE'] = naep_df[(naep_df['TEST_SUBJECT'].str.contains('Mathematics')) &
@@ -64,9 +69,15 @@ def naep_summarize_dataframe(naep_df):
     # Cast appropriate columns to strings
     summary_df['YEAR'] = summary_df['YEAR'].astype('str')
 
-    pk = summary_df['YEAR'] + '_' + summary_df['STATE']
+    # Create primary key
+    pk = summary_df['YEAR'] + '_' + summary_df['STATE'] + '_' + summary_df['DEMO']
 
     summary_df.insert(0, 'PRIMARY_KEY', pk)
+
+    # Collapse rows with the same primary key into one row
+    summary_df = summary_df.groupby(['PRIMARY_KEY', 'YEAR', 'DEMO']).sum()
+    summary_df.reset_index(inplace=True)
+    print(summary_df)
 
     return summary_df
 
