@@ -36,7 +36,7 @@ LOGGER.info('Starting data processing...')
 ## District
 
 ## State
-create_naep_states_raw_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
+# create_naep_states_raw_csv.main(LOGGER, INPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 create_naep_states_csv.main(LOGGER, OUTPUT_DIR, OUTPUT_DIR, SANITY_DIR)
 
 # Create a summary file from the NCES data
