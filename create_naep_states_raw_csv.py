@@ -128,7 +128,7 @@ def nde_spreadsheet_to_dataframe(filename, logger=None):
     data['DEMO'] = 'G0' + data['TEST_YEAR'] + '_' + data['DEMO']
 
     ## Prepend survey year
-    data['DEMO'] = data['YEAR'] + '_' + data['DEMO']
+    data['DEMO'] = data['DEMO']
 
     # Cast appropriate columns to numbers, removing non-number symbols
     data['AVG_SCORE'] = pd.to_numeric(data['AVG_SCORE'], errors='coerce')
