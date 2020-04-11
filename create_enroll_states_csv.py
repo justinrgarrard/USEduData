@@ -100,6 +100,10 @@ def restructure_enroll_data(input_df):
 
         output_df[target_col].update(target_col_data[target_col])
 
+    # Replace spaces in state names with underscores
+    output_df['PRIMARY_KEY'] = output_df['PRIMARY_KEY'].apply(lambda x: x.replace(' ', '_'))
+    output_df['STATE'] = output_df['STATE'].apply(lambda x: x.replace(' ', '_'))
+
     return output_df
 
 
