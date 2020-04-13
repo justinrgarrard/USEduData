@@ -133,6 +133,9 @@ def nde_spreadsheet_to_dataframe(filename, logger=None):
     # Cast appropriate columns to numbers, removing non-number symbols
     data['AVG_SCORE'] = pd.to_numeric(data['AVG_SCORE'], errors='coerce')
 
+    # Pandas appends weird floating point values; round to integer
+    data['AVG_SCORE'] = data['AVG_SCORE'].round(0)
+
     return data
 
 
