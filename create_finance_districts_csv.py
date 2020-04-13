@@ -16,7 +16,7 @@ import data_sanity_check
 OUTPUT_FILENAME = 'finance_districts.csv'
 
 # The name of the zip file being unpacked
-ZIP_NAME = 'elsect.zip'
+ZIP_NAME = 'US_CENSUS_FINANCE.zip'
 
 # A hard-coded schema that matches the column structure
 # Can be modified to include additional columns

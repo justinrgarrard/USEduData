@@ -13,11 +13,11 @@ A place to track development objectives.
 instead of raw spreadsheets
 * Capture school district data from NCES
 * Added sanity checks for all data files
+* Capture demographics (race/gender) for NAEP data
 
 ### To-Do
 
 * Add comprehensive validation testing
-* Capture demographics (race/gender) for NAEP data
 * Capture financial data from NCES, moving away from the Census Bureau
 * Capture faculty data from NCES
 * Capture dropout/completion data from NCES

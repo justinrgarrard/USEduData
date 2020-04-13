@@ -49,13 +49,16 @@ PRIMARY_KEY,STATE,YEAR,GRADES_PK,GRADES_KG,GRADES_4,GRADES_8,GRADES_12,GRADES_1_
 * GRADES_ALL: The count of all students in the state. Comparable to ENROLL in the financial data (which is the U.S.
 Census Bureau's estimate for students in the state).
 
-The extended version of states_all contains additional columns that breakdown enrollment by race and gender. For example:
+The extended version of states_all contains additional columns that breakdown enrollment and academics by race and 
+gender. For example:
 
 * Grades_ALL_AS: Number of students whose ethnicity was classified as "Asian".
 
-* Grades_ALL_ASM: Number of male students whose ethnicity was classified as "Asian".
+* Grades_ALL_AS_M: Number of male students whose ethnicity was classified as "Asian".
 
-* Grades_ALL_ASF: Number of female students whose ethnicity was classified as "Asian".
+* Grades_ALL_AS_F: Number of female students whose ethnicity was classified as "Asian".
+
+* G08_AS_A_READING: Average reading score of eighth grade students whose ethnicity was classified as "Asian".
 
 The represented races include AM (American Indian or Alaska Native), AS (Asian), HI (Hispanic/Latino), BL (Black or African American), WH (White), HP (Hawaiian Native/Pacific Islander), and TR (Two or More Races). The represented genders include M (Male) and F (Female).
 
@@ -128,7 +131,7 @@ don't do that.
 
 2. Subroutines for each category are run (demographics, financials, and achievement).
 
-3. Each subroutine extracts annual spreadsheets from a corresponding zip file.
+3. Each subroutine extracts data spreadsheets from a corresponding zip file.
 
 4. Annual reports are transformed into Pandas data objects, cleaned, and collected into a single spreadsheet for that
 category.
@@ -145,3 +148,4 @@ for every category, for every year, and for every state.
 * v0.3: Minor usability fixes (input/output directories).
 * v0.4: Reworked the NCES data pipeline.
 * v0.41: Adopted git-lfs to store input data
+* v0.5: Added demographic data to the NAEP source and reworked that pipeline
