@@ -50,19 +50,7 @@ def label_fixup(label_str):
     :param label_str:
     :return:
     """
-    # if 'State Name' in label_str:
-    #     return 'State Name'
-    #
-    # if 'Agency Name' in label_str:
-    #     return 'Agency Name'
-
     label_str = label_str.lower()
-
-    # Survey Year
-    # year_str = 'Y?'
-    # match = surveyyear.search(label_str)
-    # if match:
-    #     year_str = match.group(0)
 
     # Race
     # Default to A for All
