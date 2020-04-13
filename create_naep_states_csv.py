@@ -51,7 +51,7 @@ def naep_aggregate(input_df):
 
     # PRIMARY_KEY, STATE, and YEAR will be the same
     staging_df = pd.DataFrame()
-    staging_df['PRIMARY_KEY'] = input_df['STATE'] + '_' + input_df['YEAR']
+    staging_df['PRIMARY_KEY'] = input_df['YEAR'] + '_' + input_df['STATE']
     staging_df['STATE'] = input_df['STATE']
     staging_df['YEAR'] = input_df['YEAR']
 
