@@ -49,7 +49,21 @@ class AchievementStatePipelineTests(unittest.TestCase):
         shutil.rmtree(zip_name.strip('.zip') + '/')
 
     def test_state_csv_to_raw(self):
-        pass
+        # Load in data
+        output_filename = 'naep_states_raw.csv'
+        output_data = pd.read_csv(os.path.join(OUTPUT_DIR, output_filename))
+
+        # Test one entry to ensure that the transformed value matches
+        ## Uses a hardcoded value from the source spreadsheet for input
+        input_val = 223
+
+        output_row = output_data[output_data['YEAR'] == 2019]
+        output_row = output_row[output_row['STATE'] == 'IDAHO']
+        output_row = output_row[output_row['DEMO'] == 'G04_A_A']
+        output_row = output_row[output_row['TEST_SUBJECT'] == 'Reading']
+        output_val = output_row['AVG_SCORE'].iloc[0]
+
+        assert (input_val == output_val)
 
     def test_state_raw_to_standard(self):
         # Load in data
@@ -58,11 +72,11 @@ class AchievementStatePipelineTests(unittest.TestCase):
         output_filename = 'naep_states.csv'
         output_data = pd.read_csv(os.path.join(OUTPUT_DIR, output_filename))
 
-        # Test an individual cell
+        # Test one entry to ensure that the transformed value matches
         input_row = input_data[input_data['YEAR'] == 2019]
-        input_row = input_row[input_data['STATE'] == 'IDAHO']
-        input_row = input_row[input_data['DEMO'] == 'G04_A_A']
-        input_row = input_row[input_data['TEST_SUBJECT'] == 'Reading']
+        input_row = input_row[input_row['STATE'] == 'IDAHO']
+        input_row = input_row[input_row['DEMO'] == 'G04_A_A']
+        input_row = input_row[input_row['TEST_SUBJECT'] == 'Reading']
         input_val = input_row['AVG_SCORE'].iloc[0]
 
         output_row = output_data[output_data['PRIMARY_KEY'] == '2019_IDAHO']
@@ -71,7 +85,36 @@ class AchievementStatePipelineTests(unittest.TestCase):
         assert(input_val == output_val)
 
     def test_state_standard_to_summary(self):
-        pass
+        # Load in data
+        input_filename = 'naep_states.csv'
+        input_data = pd.read_csv(os.path.join(OUTPUT_DIR, input_filename))
+        output_filename = 'naep_states_summary.csv'
+        output_data = pd.read_csv(os.path.join(OUTPUT_DIR, output_filename))
+
+        # Test one entry to ensure that the transformed value matches
+        input_row = input_data[input_data['PRIMARY_KEY'] == '2019_IDAHO']
+        input_val = input_row['G04_A_A_READING'].iloc[0]
+
+        output_row = output_data[output_data['PRIMARY_KEY'] == '2019_IDAHO']
+        output_val = output_row['AVG_READING_4_SCORE'].iloc[0]
+
+        assert (input_val == output_val)
+
+    def test_state_standard_to_all(self):
+        # Load in data
+        input_filename = 'naep_states.csv'
+        input_data = pd.read_csv(os.path.join(OUTPUT_DIR, input_filename))
+        output_filename = 'states_all_extended.csv'
+        output_data = pd.read_csv(os.path.join(OUTPUT_DIR, output_filename))
+
+        # Test one entry to ensure that the transformed value matches
+        input_row = input_data[input_data['PRIMARY_KEY'] == '2019_IDAHO']
+        input_val = input_row['G04_A_A_READING'].iloc[0]
+
+        output_row = output_data[output_data['PRIMARY_KEY'] == '2019_IDAHO']
+        output_val = output_row['G04_A_A_READING'].iloc[0]
+
+        assert (input_val == output_val)
 
 
 class EnrollStatePipelineTests(unittest.TestCase):
