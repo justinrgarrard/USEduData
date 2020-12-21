@@ -76,6 +76,10 @@ endif
 test_environment:
 	$(PYTHON_INTERPRETER) test_environment.py
 
+## Test Data Processing Rules
+test_data: requirements
+	$(PYTHON_INTERPRETER) src/data/tests/tests.py
+
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################

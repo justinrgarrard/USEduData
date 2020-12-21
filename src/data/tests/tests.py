@@ -12,11 +12,14 @@ import numpy as np
 import pandas as pd
 import unittest
 import zipfile
+from pathlib import Path
 
 # Set shared input/output directories
-INPUT_DIR = os.path.abspath('../input_data')
-OUTPUT_DIR = os.path.abspath('../output_data')
-SANITY_DIR = os.path.abspath('../sanity_checks')
+project_dir = Path(__file__).resolve().parents[3]
+
+INPUT_DIR = os.path.join(project_dir, 'data/raw')
+OUTPUT_DIR = os.path.join(project_dir, 'data/processed')
+SANITY_DIR = os.path.join(project_dir, 'data/interim')
 
 
 class FinanceDistrictPipelineTests(unittest.TestCase):

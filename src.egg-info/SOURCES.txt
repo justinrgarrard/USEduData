@@ -19,6 +19,8 @@ src/data/create_naep_states_summary_csv.py
 src/data/create_states_all_csv.py
 src/data/data_sanity_check.py
 src/data/make_dataset.py
+src/data/tests/__init__.py
+src/data/tests/tests.py
 src/features/__init__.py
 src/features/build_features.py
 src/models/__init__.py
