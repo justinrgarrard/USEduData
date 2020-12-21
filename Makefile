@@ -80,6 +80,21 @@ test_environment:
 test_data: requirements
 	$(PYTHON_INTERPRETER) src/data/tests/tests.py
 
+test_data_finance_d: requirements
+	$(PYTHON_INTERPRETER) src/data/tests/tests.py FinanceDistrictPipelineTests
+
+test_data_finance_s: requirements
+	$(PYTHON_INTERPRETER) src/data/tests/tests.py FinanceStatePipelineTests
+
+test_data_enroll_d: requirements
+	$(PYTHON_INTERPRETER) src/data/tests/tests.py EnrollDistrictPipelineTests
+
+test_data_enroll_s: requirements
+	$(PYTHON_INTERPRETER) src/data/tests/tests.py EnrollStatePipelineTests
+
+test_data_achieve_s: requirements
+	$(PYTHON_INTERPRETER) src/data/tests/tests.py AchievementStatePipelineTests
+
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
