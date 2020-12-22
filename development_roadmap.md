@@ -14,6 +14,8 @@ instead of raw spreadsheets
 * Capture school district data from NCES
 * Added sanity checks for all data files
 * Capture demographics (race/gender) for NAEP data
+* Add basic validation testing
+* Refactored code to use ["Cookie Cutter Data Science Template"](https://drivendata.github.io/cookiecutter-data-science/#cookiecutter-data-science)
 
 ### To-Do
 

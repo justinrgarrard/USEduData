@@ -7,8 +7,9 @@ Generated outputs are stored on Kaggle
 
 ### Usage
 
-1. Install the relevant Python packages if necessary (see requirements.txt).
-2. Run main.py to generate output data.
+Type `make data` to create the output dataset.
+
+Type `make test_data` to run validation testing on the output dataset.
 
 ### Overview
 
@@ -149,3 +150,5 @@ for every category, for every year, and for every state.
 * v0.4: Reworked the NCES data pipeline.
 * v0.41: Adopted git-lfs to store input data
 * v0.5: Added demographic data to the NAEP source and reworked that pipeline
+* v0.6: Added basic validation testing and restructured the project to use the [Cookie Cutter Data Science Template](https://drivendata.github.io/cookiecutter-data-science/#cookiecutter-data-science)
+
