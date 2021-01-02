@@ -1,6 +1,5 @@
 *.csv
 *.xml
 *.idea
-*.ipynb
 .ipynb_checkpoints/
 /venv/
