@@ -7,7 +7,7 @@ Generated outputs are stored on Kaggle
 
 ### Setup
 
-This program is intended to be run on a Linux system with `make` and `python3` installed. Required Python libraries are listed in requirements.txt, and will be installed automatically as part of the usage.
+This program is intended to be run on a Linux system with `make`, `git-lfs`,  and `python3` installed. Required Python libraries are listed in requirements.txt, and will be installed automatically as part of the usage.
 
 ### Usage
 
@@ -18,6 +18,8 @@ Installs any required dependencies, then generates the output dataset.
 `make tests`
 
 Runs sanity and validation checks on the output dataset. Must be run after `make data`.
+
+---
 
 ### Data: Overview
 
