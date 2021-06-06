@@ -4,9 +4,10 @@ import logging
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 
-from src.data import create_enroll_states_summary_csv, create_finance_districts_csv, create_naep_states_summary_csv, \
-    create_enroll_districts_csv, create_enroll_states_raw_csv, create_states_all_csv, create_enroll_states_csv, \
-    create_naep_states_csv, create_enroll_districts_raw_csv, create_finance_states_csv, create_naep_states_raw_csv
+from src import create_finance_states_csv, create_enroll_states_summary_csv, create_enroll_districts_csv, \
+    create_finance_districts_csv, create_states_all_csv, create_naep_states_raw_csv, create_naep_states_csv, \
+    create_naep_states_summary_csv, create_enroll_districts_raw_csv, create_enroll_states_csv, \
+    create_enroll_states_raw_csv
 
 
 @click.command()

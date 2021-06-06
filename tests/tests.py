@@ -15,11 +15,12 @@ import zipfile
 from pathlib import Path
 
 # Set shared input/output directories
-project_dir = Path(__file__).resolve().parents[3]
+PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
+PROJECT_DIR = os.path.join(PARENT_DIR, '..')
 
-INPUT_DIR = os.path.join(project_dir, 'data/raw')
-OUTPUT_DIR = os.path.join(project_dir, 'data/processed')
-SANITY_DIR = os.path.join(project_dir, 'data/interim')
+INPUT_DIR = os.path.join(PROJECT_DIR, 'data/raw')
+OUTPUT_DIR = os.path.join(PROJECT_DIR, 'data/processed')
+SANITY_DIR = os.path.join(PROJECT_DIR, 'data/interim')
 
 
 class FinanceDistrictPipelineTests(unittest.TestCase):

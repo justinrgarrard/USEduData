@@ -6,7 +6,7 @@ Should be run after "create_finance_districts_csv.py".
 import os
 import pandas as pd
 import sqlite3
-from src.data import data_sanity_check
+from src import data_sanity_check
 
 INPUT_FILENAME = 'finance_districts.csv'
 OUTPUT_FILENAME = 'finance_states.csv'

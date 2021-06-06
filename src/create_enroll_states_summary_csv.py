@@ -7,7 +7,7 @@ import re
 import os
 import pandas as pd
 import us  # US metadata, like state names
-from src.data import data_sanity_check
+from src import data_sanity_check
 
 # Disable warnings for Pandas dataframe assignments
 pd.options.mode.chained_assignment = None  # default='warn'

@@ -8,7 +8,7 @@ import os
 import numpy as np
 import pandas as pd
 import us  # US metadata, like state names
-from src.data import data_sanity_check
+from src import data_sanity_check
 
 # The name of the input CSV
 INPUT_FILENAME = 'naep_states_raw.csv'

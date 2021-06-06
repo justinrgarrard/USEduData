@@ -1,5 +1,5 @@
 """
-A script for compressing NCES enrollment data on states into a
+A script for compressing NCES enrollment data on districts into a
 single CSV file.
 """
 
@@ -9,16 +9,16 @@ import os
 import pandas as pd
 import us  # US metadata, like state names
 import shutil
-from src.data import data_sanity_check
+from src import data_sanity_check
 
 # Disable warnings for Pandas dataframe assignments
 pd.options.mode.chained_assignment = None  # default='warn'
 
 # The name of the output CSVs
-OUTPUT_FILENAME = 'enroll_states_raw.csv'
+OUTPUT_FILENAME = 'enroll_districts_raw.csv'
 
 # The name of the zip file being unpacked
-ZIP_NAME = 'NCES_ENROLL_STATES.zip'
+ZIP_NAME = 'NCES_ENROLL_DISTRICTS.zip'
 
 # State names
 STATES = us.STATES
@@ -67,6 +67,9 @@ def label_fixup(label_str):
     """
     if 'State Name' in label_str:
         return 'State Name'
+
+    if 'Agency Name' in label_str:
+        return 'Agency Name'
 
     label_str = label_str.lower()
 
@@ -142,11 +145,18 @@ def main(logger=None, input_dir=None, output_dir=None, sanity_dir=None):
     column_names = output_df.columns.tolist()
     column_names = sorted(list(set(column_names)))
 
-    # Place 'State Name' as first column
+    # Place 'Agency Name' and 'State Name' as first two columns
     column_names.remove('State Name')
     column_names.insert(0, 'State Name')
 
+    column_names.remove('Agency Name')
+    column_names.insert(0, 'Agency Name')
+
     output_df = output_df[column_names]
+
+    # Handle whitespace issues related to district names in source data
+    output_df['Agency Name'] = output_df[['Agency Name']].applymap(lambda x: str(x).strip())
+    output_df.drop_duplicates(subset='Agency Name', inplace=True)
 
     # Output as file
     output_data_path = os.path.join(output_dir, OUTPUT_FILENAME)

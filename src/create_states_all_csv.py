@@ -7,7 +7,7 @@ import os
 import re
 import pandas as pd
 import us  # US metadata, like state names
-from src.data import data_sanity_check
+from src import data_sanity_check
 
 FINANCE_FILENAME = 'finance_states.csv'
 ENROLL_FILENAME = 'enroll_states_summary.csv'

@@ -16,6 +16,7 @@ instead of raw spreadsheets
 * Capture demographics (race/gender) for NAEP data
 * Add basic validation testing
 * Refactored code to use ["Cookie Cutter Data Science Template"](https://drivendata.github.io/cookiecutter-data-science/#cookiecutter-data-science)
+* Reverted the codebase to no longer use the Cookie Cutter Data Science Template
 
 ### To-Do
 
@@ -29,3 +30,10 @@ instead of raw spreadsheets
 * Add enrichments to the final data (account for inflation, add [regions](https://ies.ed.gov/ncee/edlabs/about/), etc.)
 * Simplify the process of adding data for subsequent years
     * (Since there aren't any decent API's, maybe build a Selenium web scraper?)
+
+### Addendum: Cookie Cutter Data Science Template
+
+After some consideration, the Cookie Cutter Data Science template was removed from the project. This was done in order to simplify readability for developers unfamiliar with the template.
+
+It is the author's belief that the template offers significant benefits for a team experienced with contemporary data science practices. However, programmers outside this niche are more likely to be discouraged by the complicated structure.
+

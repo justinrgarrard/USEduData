@@ -9,7 +9,7 @@ import os
 import pandas as pd
 import us  # US metadata, like state names
 import shutil
-from src.data import data_sanity_check
+from src import data_sanity_check
 
 # The name of the output CSV
 OUTPUT_FILENAME = 'finance_districts.csv'

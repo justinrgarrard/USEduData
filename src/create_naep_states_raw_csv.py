@@ -9,7 +9,7 @@ import shutil
 import os
 import pandas as pd
 import us  # US metadata, like state names
-from src.data import data_sanity_check
+from src import data_sanity_check
 
 OUTPUT_FILENAME = 'naep_states_raw.csv'
 

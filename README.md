@@ -5,13 +5,21 @@ A compilation of several education databases, summarized into a single file (sta
 Generated outputs are stored on Kaggle
 [link](https://www.kaggle.com/noriuk/us-education-datasets-unification-project/home).
 
+### Setup
+
+This program is intended to be run on a Linux system with `make` and `python3` installed. Required Python libraries are listed in requirements.txt, and will be installed automatically as part of the usage.
+
 ### Usage
 
-Type `make data` to create the output dataset.
+`make data`
 
-Type `make test_data` to run validation testing on the output dataset.
+Installs any required dependencies, then generates the output dataset.
 
-### Overview
+`make tests`
+
+Runs sanity and validation checks on the output dataset. Must be run after `make data`.
+
+### Data: Overview
 
 The data is broken down into three main categories:
 
@@ -128,7 +136,7 @@ don't do that.
 
 ### Data Pipeline
 
-1. The main function is called.
+1. The main function is called (`src/main.py`).
 
 2. Subroutines for each category are run (demographics, financials, and achievement).
 
@@ -137,10 +145,10 @@ don't do that.
 4. Annual reports are transformed into Pandas data objects, cleaned, and collected into a single spreadsheet for that
 category.
 
-5. The category spreadsheets are combined into a master spreadsheet (states_all.csv) that includes summary columns
+5. The category spreadsheets are combined into a master spreadsheet (`states_all.csv`) that includes summary columns
 for every category, for every year, and for every state.
 
-6. A data sanity check is run, generating a text file (sanity_check.txt) that reports on null values.
+6. A data sanity check is run, generating a text file (`sanity_check.txt`) that reports on null values.
 
 ### Version Info
 
@@ -148,7 +156,8 @@ for every category, for every year, and for every state.
 * v0.2: Added demographic data for enrollment (race/gender).
 * v0.3: Minor usability fixes (input/output directories).
 * v0.4: Reworked the NCES data pipeline.
-* v0.41: Adopted git-lfs to store input data
-* v0.5: Added demographic data to the NAEP source and reworked that pipeline
-* v0.6: Added basic validation testing and restructured the project to use the [Cookie Cutter Data Science Template](https://drivendata.github.io/cookiecutter-data-science/#cookiecutter-data-science)
+* v0.41: Adopted git-lfs to store input data.
+* v0.5: Added demographic data to the NAEP source and reworked that pipeline.
+* v0.6: Added basic validation testing and restructured the project to use the [Cookie Cutter Data Science Template](https://drivendata.github.io/cookiecutter-data-science/#cookiecutter-data-science).
+* v0.61: Removed the Cookie Cutter Data Science Template; justifications in `development_roadmap.md`.
 
